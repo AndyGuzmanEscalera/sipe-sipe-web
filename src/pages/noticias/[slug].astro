@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newsArticles, getNewsBySlug } from '../../data/news';
+import { formatDate } from '../../lib/format';
+
+export function getStaticPaths() {
+  return newsArticles.map((article) => ({
+    params: { slug: article.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const article = getNewsBySlug(slug!);
+
+if (!article) {
+  return Astro.redirect('/noticias/');
+}
+---
+
+<BaseLayout title={article.title} description={article.excerpt}>
+  <article>
+    <header class="container-page py-12 md:py-16">
+      <nav class="text-[0.8rem] text-ink-soft">
+        <a href="/" class="hover:text-ink">Inicio</a>
+        <span class="mx-2 opacity-40">/</span>
+        <a href="/noticias/" class="hover:text-ink">Noticias</a>
+      </nav>
+      <p class="kicker mt-8">{article.category}</p>
+      <h1 class="display-lg mt-4 max-w-4xl">{article.title}</h1>
+      <p class="mt-5 font-mono text-sm text-ink-soft">
+        {formatDate(article.publishedAt)} · {article.author}
+      </p>
+    </header>
+    <div class="container-page">
+      <img src={article.coverImage} alt={article.coverAlt} class="h-72 w-full rounded-2xl object-cover shadow-lg md:h-[30rem]" />
+    </div>
+    <div class="container-page py-12">
+      <div class="prose-municipal max-w-2xl">
+        {article.body.split('\n\n').map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <a href="/noticias/" class="link-arrow mt-12">Volver al boletín</a>
+    </div>
+  </article>
+</BaseLayout>

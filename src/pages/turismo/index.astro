@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import TourismCard from '../../components/TourismCard.astro';
+import { tourismSpots } from '../../data/tourism';
+---
+
+<BaseLayout title="Turismo" description="Atractivos turísticos y rutas en Sipe Sipe.">
+  <PageHero
+    kicker="Descubra Sipe Sipe"
+    title="Turismo, cultura y naturaleza"
+    subtitle="Miradores, patrimonio y rutas productivas para conocer el corazón del valle."
+    image="/images/inka-raqay.jpg"
+  />
+  <section class="container-page grid gap-3 py-16 md:grid-cols-2">
+    {tourismSpots.map((spot) => <TourismCard spot={spot} />)}
+  </section>
+</BaseLayout>

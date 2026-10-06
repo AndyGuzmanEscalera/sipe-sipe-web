@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroEditorial from '../components/HeroEditorial.astro';
+import ServiceIndex from '../components/ServiceIndex.astro';
+import WelcomeMayor from '../components/WelcomeMayor.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import NewsFeatured from '../components/NewsFeatured.astro';
+import EventCard from '../components/EventCard.astro';
+import TourismCard from '../components/TourismCard.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import { homeQuickLinks } from '../data/navigation';
+import { getLatestNews } from '../data/news';
+import { getUpcomingEvents } from '../data/events';
+import { tourismSpots } from '../data/tourism';
+
+const latestNews = getLatestNews(4);
+const upcomingEvents = getUpcomingEvents(4);
+---
+
+<BaseLayout
+  title="Inicio"
+  description="Portal institucional del Gobierno Autónomo Municipal de Sipe Sipe."
+>
+  <HeroEditorial />
+  <ServiceIndex items={homeQuickLinks} />
+  <WelcomeMayor />
+  <NewsFeatured articles={latestNews} />
+  <PhotoGallery />
+
+  <section class="section-lg container-page">
+    <SectionHeading
+      kicker="Agenda municipal"
+      title="Próximas actividades"
+      description="Ferias, jornadas de salud, cultura y espacios de participación ciudadana."
+      href="/eventos/"
+      linkLabel="Agenda completa"
+    />
+    <div class="grid gap-5 lg:grid-cols-2">
+      {upcomingEvents.map((event) => <EventCard event={event} />)}
+    </div>
+  </section>
+
+  <section class="section-lg soft-section">
+    <div class="container-page">
+      <SectionHeading
+        kicker="Descubra el municipio"
+        title="Turismo en Sipe Sipe"
+        description="Paisajes, patrimonio y lugares para visitar en nuestro municipio."
+        href="/turismo/"
+        linkLabel="Rutas y lugares"
+      />
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {tourismSpots.map((spot) => <TourismCard spot={spot} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

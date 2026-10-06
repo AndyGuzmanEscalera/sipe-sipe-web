@@ -1,0 +1,72 @@
+---
+import { site } from '../data/site';
+import { mainNav } from '../data/navigation';
+import { photoCredits } from '../data/media';
+---
+
+<footer class="mt-8 bg-forest-deep text-white">
+  <div class="flag-stripe" aria-hidden="true"></div>
+  <div class="container-page py-16">
+    <div class="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr]">
+      <div>
+        <div class="flex items-start gap-4">
+          <span class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-1">
+            <img src="/images/escudo-sipe-sipe.jpg" alt="Escudo de Sipe Sipe" class="h-full w-full object-contain" />
+          </span>
+          <div>
+            <p class="text-[0.7rem] tracking-[0.22em] uppercase opacity-70">Gobierno Autónomo Municipal</p>
+            <p class="mt-1 text-3xl font-extrabold leading-none">Sipe Sipe</p>
+          </div>
+        </div>
+        <p class="mt-6 max-w-md text-[1.05rem] leading-relaxed text-white/70">
+          Un municipio conectado con sus comunidades, transparente y al servicio de la ciudadanía.
+        </p>
+      </div>
+
+      <div>
+        <p class="kicker text-maize">Oficina</p>
+        <ul class="mt-4 space-y-2 text-sm text-white/75">
+          <li>{site.address}</li>
+          <li>{site.locationLine}</li>
+          <li>{site.hours}</li>
+          <li>
+            <a href={`tel:${site.phone}`} class="hover:text-white">{site.phone}</a>
+          </li>
+          <li>
+            <a href={`mailto:${site.supportEmail}`} class="hover:text-white">{site.supportEmail}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="kicker text-maize">Mapa del sitio</p>
+        <ul class="mt-4 columns-1 space-y-2 text-sm sm:columns-2 lg:columns-1">
+          {
+            mainNav.map((item) => (
+              <li>
+                <a href={item.href} class="text-white/75 hover:text-white">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-[0.75rem] tracking-wide text-white/45 sm:flex-row sm:justify-between">
+      <p>© {new Date().getFullYear()} {site.copyright}</p>
+      <p>
+        {site.edition} · Contenido de demostración ·
+        Fotos de Wikimedia Commons:
+        {photoCredits.map((item, index) => (
+          <>
+            {index > 0 && <span>, </span>}
+            <a href={item.href} class="hover:text-white">{item.credit}</a>
+          </>
+        ))}
+        . Retrato de autoridad: ilustración institucional de demostración.
+      </p>
+    </div>
+  </div>
+</footer>

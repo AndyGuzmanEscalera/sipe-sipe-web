@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title="Contacto" description="Canales de atención al ciudadano — GAM Sipe Sipe.">
+  <PageHero
+    kicker="Atención ciudadana"
+    title="Estamos para atenderle"
+    subtitle="Consulte nuestros canales de contacto, horarios y ubicación de la oficina central."
+    image="/images/sipe-sipe-amanecer.jpg"
+  />
+  <section class="container-page grid gap-16 py-16 lg:grid-cols-2">
+    <div>
+      <ul class="space-y-8">
+        <li>
+          <p class="kicker">Dirección</p>
+          <p class="mt-2 text-xl">{site.address}</p>
+        </li>
+        <li>
+          <p class="kicker">Teléfono</p>
+          <p class="mt-2 text-xl">{site.phone}</p>
+        </li>
+        <li>
+          <p class="kicker">Correo</p>
+          <p class="mt-2 text-xl">{site.supportEmail}</p>
+        </li>
+        <li>
+          <p class="kicker">Horario</p>
+          <p class="mt-2 text-xl">{site.hours}</p>
+        </li>
+      </ul>
+    </div>
+
+    <form class="surface-card p-8" action="#" method="post">
+      <label class="block text-sm">
+        Nombre
+        <input
+          type="text"
+          name="name"
+          class="mt-2 w-full border-0 border-b border-line-strong bg-transparent px-0 py-3 outline-none focus:border-adobe"
+        />
+      </label>
+      <label class="mt-8 block text-sm">
+        Correo
+        <input
+          type="email"
+          name="email"
+          class="mt-2 w-full border-0 border-b border-line-strong bg-transparent px-0 py-3 outline-none focus:border-adobe"
+        />
+      </label>
+      <label class="mt-8 block text-sm">
+        Mensaje
+        <textarea
+          name="message"
+          rows="5"
+          class="mt-2 w-full resize-none border-0 border-b border-line-strong bg-transparent px-0 py-3 outline-none focus:border-adobe"
+        ></textarea>
+      </label>
+      <button
+        type="button"
+        class="mt-10 bg-ink px-6 py-3 text-[0.78rem] font-semibold tracking-[0.16em] uppercase text-paper hover:bg-forest"
+      >
+        Enviar (demo)
+      </button>
+    </form>
+  </section>
+</BaseLayout>

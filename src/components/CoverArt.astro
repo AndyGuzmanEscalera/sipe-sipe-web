@@ -1,0 +1,68 @@
+---
+interface Props {
+  tone?: string;
+  class?: string;
+}
+
+const { tone = 'default', class: className = '' } = Astro.props;
+---
+
+<div class:list={['cover-art', className]} data-tone={tone.toLowerCase()}>
+  <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" class="h-full w-full" aria-hidden="true">
+    <rect width="400" height="260" fill="#24382f" />
+    {
+      tone.toLowerCase().includes('salud') && (
+        <>
+          <rect width="400" height="260" fill="#3d4f48" />
+          <circle cx="300" cy="80" r="70" fill="#b24a28" opacity="0.9" />
+          <circle cx="120" cy="190" r="90" fill="#c49a4a" opacity="0.35" />
+          <path d="M188 110h24v40h40v24h-40v40h-24v-40h-40v-24h40z" fill="#f4efe6" />
+        </>
+      )
+    }
+    {
+      tone.toLowerCase().includes('obra') && (
+        <>
+          <rect width="400" height="260" fill="#2a3338" />
+          <path d="M0 190 H400 V260 H0Z" fill="#c49a4a" />
+          <path d="M0 210 H400" stroke="#171411" stroke-width="6" stroke-dasharray="18 14" />
+          <rect x="40" y="70" width="70" height="120" fill="#ebe4d6" />
+          <rect x="130" y="40" width="90" height="150" fill="#6e8493" />
+          <rect x="240" y="88" width="60" height="102" fill="#b24a28" />
+        </>
+      )
+    }
+    {
+      tone.toLowerCase().includes('educ') && (
+        <>
+          <rect width="400" height="260" fill="#1c2b24" />
+          <circle cx="320" cy="70" r="46" fill="#c49a4a" />
+          <rect x="48" y="150" width="170" height="18" fill="#f4efe6" transform="rotate(-8 48 150)" />
+          <rect x="70" y="175" width="190" height="18" fill="#b24a28" transform="rotate(-8 70 175)" />
+          <rect x="90" y="200" width="150" height="18" fill="#6e8493" transform="rotate(-8 90 200)" />
+        </>
+      )
+    }
+    {
+      tone.toLowerCase().includes('econ') && (
+        <>
+          <rect width="400" height="260" fill="#8a3418" />
+          <path d="M0 160 C80 120 140 180 220 130 C300 80 360 140 400 110 V260 H0Z" fill="#c49a4a" />
+          <path d="M40 160 l40 -50 40 50" fill="none" stroke="#f4efe6" stroke-width="6" />
+          <path d="M160 170 l50 -70 50 70" fill="none" stroke="#24382f" stroke-width="6" />
+          <path d="M300 155 l35 -45 35 45" fill="none" stroke="#f4efe6" stroke-width="6" />
+        </>
+      )
+    }
+    {
+      !['salud', 'obra', 'educ', 'econ'].some((key) => tone.toLowerCase().includes(key)) && (
+        <>
+          <rect width="400" height="260" fill="#24382f" />
+          <path d="M0 150 C90 110 150 170 240 120 C320 80 370 130 400 100 V260 H0Z" fill="#3d5363" />
+          <circle cx="70" cy="70" r="28" fill="#f0d7a4" />
+          <path d="M0 200 H400 V260 H0Z" fill="#b24a28" opacity="0.7" />
+        </>
+      )
+    }
+  </svg>
+</div>

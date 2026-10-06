@@ -1,0 +1,39 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="section-lg bg-paper-deep">
+  <div class="container-page">
+    <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,420px)_1fr] lg:gap-16">
+      <figure class="surface-card overflow-hidden">
+        <div class="flag-stripe" aria-hidden="true"></div>
+        <div class="relative">
+          <img
+            src={site.mayor.photo}
+            alt={`Retrato de ${site.mayor.name}, ${site.mayor.title}`}
+            class="aspect-[3/4] w-full object-cover object-top"
+            loading="lazy"
+          />
+          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep via-forest-deep/80 to-transparent px-6 pb-6 pt-16 text-white">
+            <p class="text-lg font-bold leading-snug">{site.mayor.name}</p>
+            <p class="mt-1 text-sm text-maize/90">{site.mayor.title}</p>
+          </figcaption>
+        </div>
+      </figure>
+
+      <article>
+        <p class="kicker">Palabras del Alcalde</p>
+        <h2 class="display-lg mt-3">{site.mayor.welcomeTitle}</h2>
+        <p class="mt-6 max-w-xl text-base leading-relaxed text-ink-soft">
+          {site.mayor.message}
+        </p>
+        <p class="mt-4 text-xs text-ink-soft/80">{site.mayor.photoNote}</p>
+        <div class="mt-8">
+          <a href="/institucional/" class="btn-primary solid">
+            Conocer la institución
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

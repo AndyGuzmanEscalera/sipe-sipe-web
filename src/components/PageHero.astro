@@ -1,0 +1,41 @@
+---
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  kicker?: string;
+  title: string;
+  subtitle?: string;
+  crumbs?: Crumb[];
+  image?: string;
+}
+
+const { kicker, title, subtitle, crumbs = [{ label: 'Inicio', href: '/' }], image } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-gradient-to-br from-forest-deep via-forest to-adobe text-white">
+  {image && (
+    <img src={image} alt="" class="absolute inset-0 h-full w-full object-cover" />
+  )}
+  <div class:list={['absolute inset-0', image ? 'bg-forest-deep/70' : '']}></div>
+  <div class="absolute -right-28 -top-32 h-96 w-96 rounded-full bg-maize/15 blur-3xl"></div>
+  <div class="container-page relative py-16 md:py-20">
+    <nav class="text-[0.8rem] text-white/65" aria-label="Migas de pan">
+      {
+        crumbs.map((crumb, index) => (
+          <>
+            {index > 0 && <span class="mx-2 opacity-40">/</span>}
+            {crumb.href ? <a href={crumb.href} class="hover:text-white">{crumb.label}</a> : <span>{crumb.label}</span>}
+          </>
+        ))
+      }
+      <span class="mx-2 opacity-40">/</span>
+      <span class="text-white">{title}</span>
+    </nav>
+    {kicker && <p class="kicker mt-8 text-maize">{kicker}</p>}
+    <h1 class="display-lg mt-4 max-w-4xl text-white">{title}</h1>
+    {subtitle && <p class="mt-5 max-w-2xl text-lg text-white/75">{subtitle}</p>}
+  </div>
+</section>

@@ -1,0 +1,37 @@
+---
+import type { NewsArticle } from '../types/content';
+import { formatDate } from '../lib/format';
+
+interface Props {
+  article: NewsArticle;
+  featured?: boolean;
+}
+
+const { article, featured = false } = Astro.props;
+---
+
+<article class:list={['group', featured ? 'grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center' : 'surface-card overflow-hidden']}>
+  <a href={`/noticias/${article.slug}/`} class:list={['block overflow-hidden', featured && 'rounded-xl']}>
+    <img
+      src={article.coverImage}
+      alt={article.coverAlt}
+      class:list={[
+        'w-full object-cover transition duration-300 group-hover:scale-[1.02]',
+        featured ? 'h-72 md:h-[24rem]' : 'h-48 md:h-52',
+      ]}
+      loading="lazy"
+    />
+  </a>
+  <div class:list={['min-w-0', !featured && 'p-6']}>
+    <p class="kicker">{article.category}</p>
+    <h3 class:list={[featured ? 'display-lg mt-3' : 'mt-3 text-lg font-bold leading-snug md:text-xl']}>
+      <a href={`/noticias/${article.slug}/`} class="hover:text-forest transition">
+        {article.title}
+      </a>
+    </h3>
+    <p class:list={['mt-3 text-ink-soft leading-relaxed', featured ? 'text-base' : 'line-clamp-3 text-sm']}>
+      {article.excerpt}
+    </p>
+    <p class="mt-4 text-xs font-medium uppercase tracking-[0.08em] text-ink-soft">{formatDate(article.publishedAt)}</p>
+  </div>
+</article>

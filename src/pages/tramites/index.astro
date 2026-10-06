@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { tramites } from '../../data/tramites';
+---
+
+<BaseLayout title="Trámites" description="Consulta de trámites municipales, requisitos y tiempos.">
+  <PageHero
+    kicker="Servicios ciudadanos"
+    title="Trámites municipales"
+    subtitle="Encuentre requisitos, costos y tiempos estimados para sus gestiones."
+    image="/images/puente-viloma.jpg"
+  />
+  <section class="container-page py-16">
+    {
+      tramites.map((tramite, index) => (
+        <article class="grid gap-6 border-t border-line py-10 lg:grid-cols-[4rem_1.2fr_0.8fr]">
+          <p class="font-mono text-xs text-ink-soft">{String(index + 1).padStart(2, '0')}</p>
+          <div>
+            <h2 class="display-md">{tramite.name}</h2>
+            <p class="mt-2 text-sm text-adobe">{tramite.unit}</p>
+            <ul class="mt-5 space-y-1.5 text-ink-soft">
+              {tramite.requirements.map((req) => (
+                <li>{req}</li>
+              ))}
+            </ul>
+          </div>
+          <dl class="grid grid-cols-2 gap-6 text-sm lg:grid-cols-1">
+            <div>
+              <dt class="kicker">Plazo</dt>
+              <dd class="font-display mt-2 text-3xl">{tramite.durationDays}d</dd>
+            </div>
+            <div>
+              <dt class="kicker">Costo</dt>
+              <dd class="font-display mt-2 text-3xl">
+                {tramite.costBs === null ? 'A consulta' : `Bs ${tramite.costBs}`}
+              </dd>
+            </div>
+          </dl>
+        </article>
+      ))
+    }
+    <div class="hairline"></div>
+  </section>
+</BaseLayout>

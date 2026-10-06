@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { newsArticles } from '../../data/news';
+
+const sorted = [...newsArticles].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+const [featured, ...rest] = sorted;
+---
+
+<BaseLayout title="Noticias" description="Noticias y artículos del Gobierno Autónomo Municipal de Sipe Sipe.">
+  <PageHero
+    kicker="Actualidad municipal"
+    title="Noticias de Sipe Sipe"
+    subtitle="Información sobre obras, salud, educación, economía y actividades del municipio."
+    image="/images/iglesia-san-pedro.jpg"
+  />
+  <section class="container-page py-16">
+    {featured && <NewsCard article={featured} featured />}
+    <div class="mt-16 grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+      {rest.map((article) => <NewsCard article={article} />)}
+    </div>
+  </section>
+</BaseLayout>

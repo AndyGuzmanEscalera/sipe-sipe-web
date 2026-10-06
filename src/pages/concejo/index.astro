@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { councilPresident, councilMembers, sessionSchedule } from '../../data/concejo';
+---
+
+<BaseLayout title="Concejo Municipal" description="Integrantes del concejo, comisiones y calendario de sesiones.">
+  <PageHero
+    kicker="Órgano legislativo"
+    title="Concejo Municipal"
+    subtitle="Representantes, comisiones y sesiones del órgano deliberativo de Sipe Sipe."
+    image="/images/iglesia-san-pedro.jpg"
+  />
+
+  <section class="container-page py-16">
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+      <aside class="rounded-2xl bg-forest-deep p-8 text-white shadow-xl">
+        <p class="kicker text-maize">Presidencia</p>
+        <p class="font-display mt-4 text-4xl leading-tight">{councilPresident}</p>
+        <p class="mt-6 text-white/75">{sessionSchedule}</p>
+      </aside>
+
+      <div>
+        <p class="kicker">Bancas y comisiones</p>
+        <ul class="mt-6 divide-y divide-line border-y border-line">
+          {
+            councilMembers.map((member) => (
+              <li class="grid gap-2 py-5 md:grid-cols-[1fr_auto]">
+                <div>
+                  <p class="text-lg">{member.name}</p>
+                  <p class="text-sm text-ink-soft">{member.block}</p>
+                </div>
+                <p class="text-sm tracking-wide text-adobe md:text-right">{member.commission}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

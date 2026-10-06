@@ -1,0 +1,127 @@
+---
+import type { HeroSlide } from '../types/content';
+
+interface Props {
+  slides: HeroSlide[];
+}
+
+const { slides } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-brand-950" aria-label="Destacados">
+  {
+    slides.map((slide, index) => (
+      <article
+        class:list={['hero-slide', index === 0 && 'is-active']}
+        data-slide-index={index}
+        style={`background: ${slide.background}`}
+      >
+        <div class="container-page flex min-h-[320px] flex-col justify-center py-16 md:min-h-[420px]">
+          <p class="text-sm font-semibold uppercase tracking-widest text-white/80">Municipio de Sipe Sipe</p>
+          <h2 class="mt-3 max-w-3xl text-3xl font-bold leading-tight text-white md:text-5xl">{slide.title}</h2>
+          <p class="mt-4 max-w-2xl text-lg text-white/90">{slide.subtitle}</p>
+          <a
+            href={slide.ctaHref}
+            class="mt-8 inline-flex w-fit rounded-md bg-accent-500 px-6 py-3 text-sm font-bold uppercase tracking-wide text-brand-950 hover:bg-accent-400"
+          >
+            {slide.ctaLabel}
+          </a>
+        </div>
+      </article>
+    ))
+  }
+
+  {
+    slides.length > 1 && (
+      <div class="absolute bottom-4 left-0 right-0">
+        <div class="container-page flex items-center justify-between gap-4">
+          <div class="flex gap-2" role="tablist" aria-label="Slides">
+            {slides.map((_, index) => (
+              <button
+                type="button"
+                class="hero-dot h-2.5 w-2.5 rounded-full bg-white/40"
+                data-dot-index={index}
+                aria-label={`Ir al slide ${index + 1}`}
+              />
+            ))}
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              class="hero-prev rounded-md bg-black/30 px-3 py-1 text-white hover:bg-black/50"
+              aria-label="Anterior"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              class="hero-next rounded-md bg-black/30 px-3 py-1 text-white hover:bg-black/50"
+              aria-label="Siguiente"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .hero-slide {
+    display: none;
+  }
+  .hero-slide.is-active {
+    display: block;
+  }
+  .hero-dot.is-active {
+    background: white;
+    width: 1.75rem;
+  }
+</style>
+
+<script>
+  function initHeroCarousel(root: HTMLElement) {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.hero-slide'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('.hero-dot'));
+    const prev = root.querySelector<HTMLButtonElement>('.hero-prev');
+    const next = root.querySelector<HTMLButtonElement>('.hero-next');
+    if (slides.length <= 1) return;
+
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (index: number) => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('is-active', i === current));
+      dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+    };
+
+    const restart = () => {
+      if (timer) window.clearInterval(timer);
+      timer = window.setInterval(() => show(current + 1), 7000);
+    };
+
+    prev?.addEventListener('click', () => {
+      show(current - 1);
+      restart();
+    });
+    next?.addEventListener('click', () => {
+      show(current + 1);
+      restart();
+    });
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        show(index);
+        restart();
+      });
+    });
+
+    show(0);
+    restart();
+  }
+
+  document.querySelectorAll('section[aria-label="Destacados"]').forEach((section) => {
+    initHeroCarousel(section as HTMLElement);
+  });
+</script>

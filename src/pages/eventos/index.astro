@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import EventCard from '../../components/EventCard.astro';
+import { events } from '../../data/events';
+
+const sorted = [...events].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+---
+
+<BaseLayout title="Eventos" description="Agenda de eventos municipales de Sipe Sipe.">
+  <PageHero
+    kicker="Agenda municipal"
+    title="Próximos eventos"
+    subtitle="Actividades culturales, jornadas de salud, sesiones y ferias del municipio."
+    image="/images/iglesia-san-pedro-plaza.jpg"
+  />
+  <section class="container-page py-16">
+    <div class="grid gap-4 lg:grid-cols-2">
+      {sorted.map((event) => <EventCard event={event} />)}
+    </div>
+    <div class="hairline"></div>
+  </section>
+</BaseLayout>

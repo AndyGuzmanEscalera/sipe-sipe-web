@@ -1,0 +1,33 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { homeGallery } from '../data/media';
+---
+
+<section class="section-lg container-page">
+  <SectionHeading
+    kicker="El municipio"
+    title="Sipe Sipe en imágenes"
+    description="Paisaje, patrimonio y lugares que identifican a nuestro municipio."
+    href="/turismo/"
+    linkLabel="Ver turismo"
+  />
+  <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      homeGallery.map((photo) => (
+        <li class="group overflow-hidden rounded-xl">
+          <figure class="relative min-h-64">
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              class="h-64 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+              loading="lazy"
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 to-transparent px-4 py-4 text-sm font-semibold text-white">
+              {photo.caption}
+            </figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+</section>

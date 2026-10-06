@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import {
+  mission,
+  vision,
+  values,
+  executiveAuthorities,
+  organizationalUnits,
+} from '../../data/institucional';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title="Institucional" description="Misión, visión, autoridades y estructura organizacional.">
+  <PageHero
+    kicker="Gobierno municipal"
+    title="Conozca nuestra institución"
+    subtitle="Misión, visión, principios y autoridades al servicio del municipio de Sipe Sipe."
+    image="/images/iglesia-san-pedro-fachada.jpg"
+  />
+
+  <section class="container-page grid gap-16 py-16 lg:grid-cols-2">
+    <article>
+      <p class="kicker">Misión</p>
+      <p class="display-md mt-4 text-ink-soft">{mission}</p>
+    </article>
+    <article>
+      <p class="kicker">Visión</p>
+      <p class="display-md mt-4 text-ink-soft">{vision}</p>
+    </article>
+  </section>
+
+  <section class="border-y border-line bg-paper-deep">
+    <div class="container-page py-16">
+      <p class="kicker">Principios</p>
+      <ul class="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+        {
+          values.map((value) => (
+            <li class="font-display text-3xl tracking-tight">{value}</li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <article class="mb-16 grid items-center gap-10 overflow-hidden rounded-xl border border-line bg-white lg:grid-cols-[280px_1fr]">
+      <img
+        src={site.mayor.photo}
+        alt={`Retrato de ${site.mayor.name}`}
+        class="h-80 w-full object-cover object-top lg:h-full"
+      />
+      <div class="p-8 lg:p-10">
+        <p class="kicker">Alcaldía</p>
+        <h2 class="display-md mt-3">{site.mayor.name}</h2>
+        <p class="mt-2 text-sm tracking-wide text-adobe">{site.mayor.title}</p>
+        <p class="mt-5 max-w-xl text-ink-soft">{site.mayor.message}</p>
+      </div>
+    </article>
+
+    <p class="kicker">Gabinete</p>
+    <h2 class="display-lg mt-3 mb-10">Quién firma las decisiones</h2>
+    <div class="divide-y divide-line border-y border-line">
+      {
+        executiveAuthorities.map((authority) => (
+          <article class="grid items-center gap-4 py-8 md:grid-cols-[minmax(0,280px)_1fr]">
+            <div class="flex items-center gap-4">
+              {authority.photo ? (
+                <img src={authority.photo} alt="" class="h-16 w-16 rounded-full object-cover object-top" />
+              ) : null}
+              <div>
+                <h3 class="display-md">{authority.name}</h3>
+                <p class="mt-2 text-sm tracking-wide text-adobe">{authority.role}</p>
+              </div>
+            </div>
+            <p class="max-w-xl text-ink-soft">{authority.bio}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container-page pb-20">
+    <p class="kicker">Estructura</p>
+    <ol class="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {
+        organizationalUnits.map((unit, index) => (
+          <li class="bg-paper px-5 py-6">
+            <span class="font-mono text-xs text-ink-soft">{String(index + 1).padStart(2, '0')}</span>
+            <p class="mt-2 text-lg">{unit}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</BaseLayout>

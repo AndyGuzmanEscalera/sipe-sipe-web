@@ -1,0 +1,26 @@
+---
+import type { TourismSpot } from '../types/content';
+
+interface Props {
+  spot: TourismSpot;
+}
+
+const { spot } = Astro.props;
+---
+
+<article class="group relative min-h-80 overflow-hidden rounded-xl bg-forest text-white">
+  <img
+    src={spot.image}
+    alt={spot.name}
+    class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+    loading="lazy"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-forest-deep/95 via-forest/40 to-transparent"></div>
+  <div class="relative flex h-full min-h-80 flex-col justify-end p-6">
+    <p class="text-xs font-semibold uppercase tracking-[0.08em] text-maize/90">
+      {spot.distanceKm} km del centro
+    </p>
+    <h3 class="mt-3 text-lg font-bold leading-snug md:text-xl">{spot.name}</h3>
+    <p class="mt-2 max-w-sm text-sm leading-relaxed text-white/80">{spot.summary}</p>
+  </div>
+</article>

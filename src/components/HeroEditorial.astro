@@ -1,0 +1,49 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="relative min-h-[480px] overflow-hidden bg-forest-deep text-white">
+  <img
+    src="/images/sipe-sipe-amanecer.jpg"
+    alt="Amanecer en Sipe Sipe, Cochabamba"
+    class="absolute inset-0 h-full w-full object-cover"
+    fetchpriority="high"
+  />
+  <!-- Overlay profesional: sutil pero claro -->
+  <div class="absolute inset-0 bg-gradient-to-r from-forest-deep/70 via-forest/60 to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-forest-deep/50 via-transparent to-transparent"></div>
+
+  <div class="container-page relative flex min-h-[480px] items-center py-12 lg:py-16">
+    <div class="max-w-2xl">
+      <p class="text-sm font-semibold uppercase tracking-[0.1em] text-maize/90">Bienvenido</p>
+      <h1 class="mt-3 max-w-[14ch] text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl">
+        Municipio de Sipe Sipe
+      </h1>
+      <p class="mt-6 max-w-lg text-base leading-relaxed text-white/85 md:text-lg">
+        Tu puerta de acceso a información, servicios y oportunidades del municipio.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/tramites/" class="btn-primary solid">
+          Consultar trámites
+        </a>
+        <a href="/institucional/" class="inline-flex items-center justify-center rounded-lg border border-white/80 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+          Conocer más
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datos clave: línea nítida sin saturación -->
+  <div class="border-t border-white/15 bg-forest-deep/80 backdrop-blur-sm">
+    <dl class="container-page grid grid-cols-2 gap-6 py-8 lg:grid-cols-4">
+      {
+        site.stats.map((stat) => (
+          <div>
+            <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-maize/70">{stat.label}</dt>
+            <dd class="mt-2 text-2xl font-bold text-white">{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
