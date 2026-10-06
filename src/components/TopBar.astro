@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import { withBase } from '../lib/withBase';
 ---
 
 <div class="bg-adobe-deep text-[0.74rem] text-white">
@@ -15,7 +16,7 @@ import { site } from '../data/site';
           </a>
         ))
       }
-      <a href="/contacto/" class="font-bold text-white underline decoration-white/40 underline-offset-4">Contacto y ubicación</a>
+      <a href={withBase('/contacto/')} class="font-bold text-white underline decoration-white/40 underline-offset-4">Contacto y ubicación</a>
     </div>
   </div>
 </div>

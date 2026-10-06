@@ -8,12 +8,12 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<section class="section-lg bg-white">
+<section class="section-lg bg-white pt-12 lg:pt-16">
   <div class="container-page">
-    <div class="mb-12">
+    <div class="mb-12 max-w-2xl">
       <p class="kicker">Accesos rápidos</p>
       <h2 class="display-lg">Servicios e información</h2>
-      <p class="mt-3 max-w-2xl text-base text-ink-soft">
+      <p class="mt-3 text-base text-ink-soft">
         Acceda de forma ágil a los servicios, documentos y trámites del municipio.
       </p>
     </div>
@@ -21,19 +21,18 @@ const { items } = Astro.props;
     <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {
         items.map((item, idx) => (
-          <li class="service-item">
+          <li>
             <a
               href={item.href}
-              class="surface-card group flex h-full min-h-36 flex-col border-l-4 p-6 transition duration-200"
-              style={{
-                borderLeftColor: idx % 2 === 0 ? '#079447' : '#08a9dc',
-              }}
+              class="group flex h-full min-h-40 flex-col rounded-[1.75rem] bg-paper-deep p-6 transition duration-200 hover:-translate-y-1 hover:bg-white hover:shadow-[0_16px_36px_rgb(32_51_43/0.1)]"
             >
-              <span class="text-base font-bold text-ink group-hover:text-forest">{item.label}</span>
-              <span class="mt-2 flex-1 text-sm text-ink-soft leading-relaxed">{item.description}</span>
-              <span class="mt-4 text-xs font-semibold uppercase tracking-[0.08em] text-forest group-hover:text-forest-deep">
-                Acceder →
-              </span>
+              <span
+                class="mb-4 h-2.5 w-10 rounded-full"
+                style={{ background: idx % 2 === 0 ? '#079447' : '#08a9dc' }}
+              ></span>
+              <span class="text-lg font-bold text-ink group-hover:text-forest">{item.label}</span>
+              <span class="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{item.description}</span>
+              <span class="mt-5 text-sm font-semibold text-forest">Acceder →</span>
             </a>
           </li>
         ))
@@ -41,18 +40,3 @@ const { items } = Astro.props;
     </ul>
   </div>
 </section>
-
-<style>
-  .service-item:nth-child(odd) > a {
-    border-left-color: #079447;
-  }
-
-  .service-item:nth-child(even) > a {
-    border-left-color: #08a9dc;
-  }
-
-  .service-item:nth-child(even) > a > span:first-child,
-  .service-item:nth-child(even) > a > span:last-child {
-    color: #077fa8;
-  }
-</style>

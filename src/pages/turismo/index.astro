@@ -12,7 +12,7 @@ import { tourismSpots } from '../../data/tourism';
     subtitle="Miradores, patrimonio y rutas productivas para conocer el corazón del valle."
     image="/images/inka-raqay.jpg"
   />
-  <section class="container-page grid gap-3 py-16 md:grid-cols-2">
+  <section class="container-page grid gap-5 py-16 md:grid-cols-2">
     {tourismSpots.map((spot) => <TourismCard spot={spot} />)}
   </section>
 </BaseLayout>

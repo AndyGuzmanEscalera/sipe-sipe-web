@@ -1,6 +1,9 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+import { withBase } from '../lib/withBase';
 import { homeGallery } from '../data/media';
+
+const [featured, ...rest] = homeGallery;
 ---
 
 <section class="section-lg container-page">
@@ -11,23 +14,36 @@ import { homeGallery } from '../data/media';
     href="/turismo/"
     linkLabel="Ver turismo"
   />
-  <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
     {
-      homeGallery.map((photo) => (
-        <li class="group overflow-hidden rounded-xl">
-          <figure class="relative min-h-64">
-            <img
-              src={photo.src}
-              alt={photo.alt}
-              class="h-64 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-              loading="lazy"
-            />
-            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 to-transparent px-4 py-4 text-sm font-semibold text-white">
-              {photo.caption}
-            </figcaption>
-          </figure>
-        </li>
+      featured && (
+        <figure class="group relative overflow-hidden rounded-[2rem] md:col-span-2 md:row-span-2 md:min-h-[28rem]">
+          <img
+            src={withBase(featured.src)}
+            alt={featured.alt}
+            class="h-full min-h-72 w-full object-cover transition duration-500 group-hover:scale-[1.04] md:absolute md:inset-0"
+            loading="lazy"
+          />
+          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 to-transparent px-6 py-5 text-base font-semibold text-white">
+            {featured.caption}
+          </figcaption>
+        </figure>
+      )
+    }
+    {
+      rest.map((photo) => (
+        <figure class="group relative min-h-56 overflow-hidden rounded-[2rem]">
+          <img
+            src={withBase(photo.src)}
+            alt={photo.alt}
+            class="h-56 w-full object-cover transition duration-500 group-hover:scale-[1.04] lg:h-full"
+            loading="lazy"
+          />
+          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-forest-deep/90 to-transparent px-5 py-4 text-sm font-semibold text-white">
+            {photo.caption}
+          </figcaption>
+        </figure>
       ))
     }
-  </ul>
+  </div>
 </section>

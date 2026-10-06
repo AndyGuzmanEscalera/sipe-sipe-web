@@ -1,7 +1,8 @@
 ---
 import { mainNav } from '../data/navigation';
+import { stripBase, withBase } from '../lib/withBase';
 
-const currentPath = Astro.url.pathname;
+const currentPath = stripBase(Astro.url.pathname);
 const navLabels: Record<string, string> = {
   '/concejo/': 'Concejo',
   '/gaceta/': 'Gaceta',
@@ -11,9 +12,9 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
 
 <header class="sticky top-0 z-40 border-b border-line bg-white shadow-[0_2px_12px_rgb(32_51_43/0.05)] backdrop-blur-sm">
   <div class="container-page flex items-center justify-between gap-8 py-3">
-    <a href="/" class="flex min-w-0 items-center gap-3 text-ink">
-      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-forest-deep/5 border border-line">
-        <img src="/images/escudo-sipe-sipe.jpg" alt="Escudo de Sipe Sipe" class="h-10 w-10 object-contain" />
+    <a href={withBase('/')} class="flex min-w-0 items-center gap-3 text-ink">
+      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-forest-deep/5 ring-1 ring-line">
+        <img src={withBase('/images/escudo-sipe-sipe.jpg')} alt="Escudo de Sipe Sipe" class="h-10 w-10 object-contain" />
       </span>
       <span class="min-w-0 flex-col hidden sm:flex">
         <span class="block truncate text-base font-bold leading-tight">Sipe Sipe</span>
@@ -30,9 +31,9 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
             return (
               <li>
                 <a
-                  href={item.href}
+                  href={withBase(item.href)}
                   class:list={[
-                    'block rounded-md px-3 py-2 text-[0.85rem] font-medium transition duration-200',
+                    'block rounded-full px-3.5 py-2 text-[0.85rem] font-medium transition duration-200',
                     active
                       ? 'bg-forest text-white'
                       : 'text-ink hover:text-forest hover:bg-paper-deep',
@@ -47,14 +48,14 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
       </ul>
     </nav>
 
-    <a href="/contacto/" class="hidden gap-2 items-center text-sm font-medium text-forest hover:text-forest-deep md:flex">
+    <a href={withBase('/contacto/')} class="hidden gap-2 items-center text-sm font-medium text-forest hover:text-forest-deep md:flex">
       Contacto
     </a>
 
     <button
       id="nav-toggle"
       type="button"
-      class="flex h-10 w-10 items-center justify-center rounded-md border border-line text-ink lg:hidden"
+      class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink lg:hidden"
       aria-expanded="false"
       aria-controls="nav-panel"
       aria-label="Abrir menú"
@@ -76,7 +77,7 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
           return (
             <li>
               <a
-                href={item.href}
+                href={withBase(item.href)}
                 class:list={[
                   'block border-b border-line py-3.5 text-base font-semibold',
                   active ? 'text-adobe' : 'text-ink',

@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+import { transparencyLinks } from '../data/notices';
+import { withBase } from '../lib/withBase';
+---
+
+<section class="container-page pb-4">
+  <div class="rounded-[2rem] bg-paper-deep p-6 md:p-8">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="kicker">Transparencia</p>
+        <h2 class="mt-1 text-2xl font-bold text-ink md:text-3xl">Gestión abierta a la ciudadanía</h2>
+      </div>
+      <a href={withBase('/institucional/')} class="link-arrow">Más sobre la gestión</a>
+    </div>
+
+    <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        transparencyLinks.map((item, idx) => (
+          <li>
+            <a
+              href={withBase('/institucional/')}
+              class="group flex h-full items-start gap-4 rounded-[1.5rem] bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgb(32_51_43/0.1)]"
+            >
+              <span
+                class:list={[
+                  'grid h-11 w-11 shrink-0 place-items-center rounded-xl',
+                  idx % 2 === 0 ? 'bg-forest/10 text-forest' : 'bg-adobe/10 text-adobe-deep',
+                ]}
+              >
+                <Icon name={item.icon} class="h-5 w-5" />
+              </span>
+              <span>
+                <span class="block font-semibold text-ink group-hover:text-forest">{item.label}</span>
+                <span class="mt-0.5 block text-sm text-ink-soft">{item.description}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

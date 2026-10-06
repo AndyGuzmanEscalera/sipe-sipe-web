@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/withBase';
+
 interface Crumb {
   label: string;
   href?: string;
@@ -15,9 +17,9 @@ interface Props {
 const { kicker, title, subtitle, crumbs = [{ label: 'Inicio', href: '/' }], image } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-gradient-to-br from-forest-deep via-forest to-adobe text-white">
+<section class="relative overflow-hidden rounded-b-[2.5rem] bg-gradient-to-br from-forest-deep via-forest to-adobe text-white">
   {image && (
-    <img src={image} alt="" class="absolute inset-0 h-full w-full object-cover" />
+    <img src={withBase(image)} alt="" class="absolute inset-0 h-full w-full object-cover" />
   )}
   <div class:list={['absolute inset-0', image ? 'bg-forest-deep/70' : '']}></div>
   <div class="absolute -right-28 -top-32 h-96 w-96 rounded-full bg-maize/15 blur-3xl"></div>
@@ -27,7 +29,7 @@ const { kicker, title, subtitle, crumbs = [{ label: 'Inicio', href: '/' }], imag
         crumbs.map((crumb, index) => (
           <>
             {index > 0 && <span class="mx-2 opacity-40">/</span>}
-            {crumb.href ? <a href={crumb.href} class="hover:text-white">{crumb.label}</a> : <span>{crumb.label}</span>}
+            {crumb.href ? <a href={withBase(crumb.href)} class="hover:text-white">{crumb.label}</a> : <span>{crumb.label}</span>}
           </>
         ))
       }

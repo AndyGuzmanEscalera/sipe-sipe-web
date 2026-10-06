@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { withBase } from '../lib/withBase';
+
+const contacts = [
+  { icon: 'pin', label: 'Dirección', value: site.address },
+  { icon: 'clock', label: 'Horario', value: site.hours },
+  { icon: 'phone', label: 'Teléfono', value: site.phone },
+  { icon: 'mail', label: 'Correo', value: site.email },
+] as const;
+---
+
+<section class="section-lg container-page">
+  <div class="relative overflow-hidden rounded-[2.5rem] bg-forest-deep">
+    <img
+      src={withBase('/images/iglesia-san-pedro-plaza.jpg')}
+      alt=""
+      class="absolute inset-0 h-full w-full object-cover opacity-25"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-forest-deep via-forest-deep/90 to-forest-deep/40"></div>
+
+    <div class="relative grid gap-8 p-7 md:p-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <div class="text-white">
+        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-maize">Atención ciudadana</p>
+        <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">
+          Estamos para servirle, vecina y vecino de Sipe Sipe
+        </h2>
+        <p class="mt-4 max-w-md text-white/80">
+          Acérquese a la Plaza 6 de Agosto o escríbanos. Le orientamos sobre trámites, reclamos y
+          solicitudes.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href={withBase('/contacto/')} class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-forest-deep transition hover:bg-maize">
+            Contáctenos
+            <Icon name="arrow" class="h-4 w-4" />
+          </a>
+          <a href={withBase('/tramites/')} class="inline-flex items-center rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+            Seguimiento de trámites
+          </a>
+        </div>
+      </div>
+
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {
+          contacts.map((item) => (
+            <li class="rounded-[1.5rem] border border-white/10 bg-white/10 p-5 text-white backdrop-blur-md">
+              <span class="grid h-10 w-10 place-items-center rounded-xl bg-white/15 text-maize">
+                <Icon name={item.icon} class="h-5 w-5" />
+              </span>
+              <p class="mt-3 text-xs font-semibold uppercase tracking-[0.1em] text-white/60">{item.label}</p>
+              <p class="mt-0.5 break-words font-semibold leading-snug">{item.value}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

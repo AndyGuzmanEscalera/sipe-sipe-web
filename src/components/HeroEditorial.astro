@@ -1,49 +1,136 @@
 ---
+import Icon from './Icon.astro';
 import { site } from '../data/site';
+import { heroShortcuts, notices } from '../data/notices';
+import { withBase } from '../lib/withBase';
+
+const latestNotice = notices[0];
 ---
 
-<section class="relative min-h-[480px] overflow-hidden bg-forest-deep text-white">
-  <img
-    src="/images/sipe-sipe-amanecer.jpg"
-    alt="Amanecer en Sipe Sipe, Cochabamba"
-    class="absolute inset-0 h-full w-full object-cover"
-    fetchpriority="high"
-  />
-  <!-- Overlay profesional: sutil pero claro -->
-  <div class="absolute inset-0 bg-gradient-to-r from-forest-deep/70 via-forest/60 to-transparent"></div>
-  <div class="absolute inset-0 bg-gradient-to-t from-forest-deep/50 via-transparent to-transparent"></div>
+<section class="relative isolate">
+  <div class="relative overflow-hidden rounded-b-[2.5rem] lg:rounded-b-[3.5rem]">
+    <img
+      src={withBase('/images/sipe-sipe-amanecer.jpg')}
+      alt="Amanecer en Sipe Sipe, Cochabamba"
+      class="absolute inset-0 h-full w-full object-cover object-[center_40%]"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-r from-[#03301f]/95 via-[#03301f]/65 to-[#03301f]/15"></div>
+    <div class="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#03301f]/70 to-transparent"></div>
+    <div class="pointer-events-none absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-adobe/25 blur-3xl"></div>
 
-  <div class="container-page relative flex min-h-[480px] items-center py-12 lg:py-16">
-    <div class="max-w-2xl">
-      <p class="text-sm font-semibold uppercase tracking-[0.1em] text-maize/90">Bienvenido</p>
-      <h1 class="mt-3 max-w-[14ch] text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl">
-        Municipio de Sipe Sipe
-      </h1>
-      <p class="mt-6 max-w-lg text-base leading-relaxed text-white/85 md:text-lg">
-        Tu puerta de acceso a información, servicios y oportunidades del municipio.
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="/tramites/" class="btn-primary solid">
-          Consultar trámites
+    <div class="container-page relative grid items-center gap-12 pb-44 pt-14 md:pb-48 lg:grid-cols-[1.1fr_0.9fr] lg:pb-56 lg:pt-20">
+      <div class="max-w-xl text-white">
+        <a
+          href={withBase(latestNotice.href)}
+          class="group inline-flex max-w-full items-center gap-3 rounded-full border border-white/20 bg-white/10 py-1.5 pl-1.5 pr-4 text-sm backdrop-blur-md transition hover:bg-white/15"
+        >
+          <span class="rounded-full bg-maize px-3 py-1 text-xs font-bold uppercase tracking-wide text-forest-deep">
+            {latestNotice.tag}
+          </span>
+          <span class="truncate text-white/90">Becas escolares 2026</span>
+          <Icon name="arrow" class="h-4 w-4 shrink-0 transition group-hover:translate-x-0.5" />
         </a>
-        <a href="/institucional/" class="inline-flex items-center justify-center rounded-lg border border-white/80 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
-          Conocer más
-        </a>
+
+        <p class="mt-8 text-base font-medium text-maize">Bienvenidos al municipio de</p>
+        <h1 class="mt-2 text-6xl font-extrabold leading-[0.9] tracking-tight md:text-8xl">
+          Sipe Sipe
+        </h1>
+        <div class="mt-5 flex items-center gap-3">
+          <span class="h-1.5 w-10 rounded-full bg-adobe"></span>
+          <span class="h-1.5 w-10 rounded-full bg-white"></span>
+          <span class="h-1.5 w-10 rounded-full bg-forest"></span>
+        </div>
+        <p class="mt-6 max-w-md text-lg leading-relaxed text-white/85">
+          {site.motto}. Gobierno Autónomo Municipal al servicio del valle bajo de Cochabamba.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={withBase('/tramites/')} class="btn-primary solid">Consultar trámites</a>
+          <a
+            href={withBase('/institucional/')}
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/15"
+          >
+            Conocer la gestión
+          </a>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block">
+        <div class="relative ml-auto aspect-[1/1.02] w-full max-w-[27rem]">
+          <figure class="absolute right-0 top-0 w-[62%] overflow-hidden rounded-[2rem] border-4 border-white/90 shadow-[0_30px_60px_rgb(0_0_0/0.35)]">
+            <img src={withBase('/images/iglesia-san-pedro-fachada.jpg')} alt="Templo de San Pedro" class="aspect-[4/5] w-full object-cover" />
+          </figure>
+          <figure class="absolute bottom-[6%] left-0 w-[52%] overflow-hidden rounded-[2rem] border-4 border-white/90 shadow-[0_30px_60px_rgb(0_0_0/0.35)]">
+            <img src={withBase('/images/inka-raqay.jpg')} alt="Inka Raqay" class="aspect-square w-full object-cover" />
+          </figure>
+          <div class="absolute bottom-0 right-[4%] flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_20px_40px_rgb(0_0_0/0.25)]">
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-forest/10 text-forest">
+              <Icon name="pin" class="h-5 w-5" />
+            </span>
+            <span>
+              <span class="block text-sm font-bold text-ink">Patrimonio vivo</span>
+              <span class="block text-xs text-ink-soft">Inka Raqay · San Pedro</span>
+            </span>
+          </div>
+          <div class="absolute left-[8%] top-[10%] grid h-24 w-24 place-items-center rounded-full bg-adobe text-center text-white shadow-[0_20px_40px_rgb(0_0_0/0.25)]">
+            <span>
+              <span class="block text-2xl font-extrabold leading-none">27</span>
+              <span class="block text-[0.65rem] font-semibold uppercase tracking-wide">comunidades</span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Datos clave: línea nítida sin saturación -->
-  <div class="border-t border-white/15 bg-forest-deep/80 backdrop-blur-sm">
-    <dl class="container-page grid grid-cols-2 gap-6 py-8 lg:grid-cols-4">
-      {
-        site.stats.map((stat) => (
-          <div>
-            <dt class="text-xs font-semibold uppercase tracking-[0.08em] text-maize/70">{stat.label}</dt>
-            <dd class="mt-2 text-2xl font-bold text-white">{stat.value}</dd>
-          </div>
-        ))
-      }
-    </dl>
+  <div class="container-page relative z-10 -mt-32 lg:-mt-40">
+    <div class="rounded-[2rem] bg-white p-5 shadow-[0_30px_70px_rgb(32_51_43/0.16)] md:p-7">
+      <div class="flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.14em] text-adobe">Accesos rápidos</p>
+          <h2 class="mt-1 text-xl font-bold text-ink md:text-2xl">¿Qué necesita hacer hoy?</h2>
+        </div>
+        <p class="flex items-center gap-2 text-sm text-ink-soft">
+          <Icon name="clock" class="h-4 w-4 text-forest" />
+          {site.hours}
+        </p>
+      </div>
+
+      <ul class="mt-5 grid grid-cols-3 gap-3 md:grid-cols-6">
+        {
+          heroShortcuts.map((item, idx) => (
+            <li>
+              <a
+                href={withBase(item.href)}
+                class="group flex flex-col items-center gap-2 rounded-2xl bg-paper-deep px-2 py-4 text-center transition hover:-translate-y-0.5 hover:bg-forest hover:text-white"
+              >
+                <span
+                  class:list={[
+                    'grid h-12 w-12 place-items-center rounded-full bg-white shadow-sm transition group-hover:bg-white/15',
+                    idx % 2 === 0 ? 'text-forest' : 'text-adobe-deep',
+                    'group-hover:text-white',
+                  ]}
+                >
+                  <Icon name={item.icon} />
+                </span>
+                <span class="text-sm font-semibold">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <dl class="mt-6 grid grid-cols-2 gap-y-4 border-t border-line pt-5 md:grid-cols-4">
+        {
+          site.stats.map((stat, idx) => (
+            <div class:list={['px-2', idx > 0 && 'md:border-l md:border-line md:pl-6']}>
+              <dt class="sr-only">{stat.label}</dt>
+              <dd class="text-2xl font-extrabold text-ink md:text-3xl">{stat.value}</dd>
+              <dd class="text-sm text-ink-soft" aria-hidden="true">{stat.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
   </div>
 </section>

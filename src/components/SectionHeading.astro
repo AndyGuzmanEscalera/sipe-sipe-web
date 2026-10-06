@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/withBase';
+
 interface Props {
   kicker?: string;
   title: string;
@@ -18,7 +20,7 @@ const { kicker, title, description, href, linkLabel = 'Ver todo' } = Astro.props
   </div>
   {
     href && (
-      <a href={href} class="link-arrow shrink-0">
+      <a href={withBase(href)} class="link-arrow shrink-0">
         {linkLabel}
       </a>
     )

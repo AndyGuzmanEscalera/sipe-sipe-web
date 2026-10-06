@@ -1,6 +1,7 @@
 ---
 import type { NewsArticle } from '../types/content';
 import { formatDate } from '../lib/format';
+import { withBase } from '../lib/withBase';
 
 interface Props {
   article: NewsArticle;
@@ -11,9 +12,9 @@ const { article, featured = false } = Astro.props;
 ---
 
 <article class:list={['group', featured ? 'grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center' : 'surface-card overflow-hidden']}>
-  <a href={`/noticias/${article.slug}/`} class:list={['block overflow-hidden', featured && 'rounded-xl']}>
+  <a href={withBase(`/noticias/${article.slug}/`)} class:list={['block overflow-hidden', featured && 'rounded-[2rem]']}>
     <img
-      src={article.coverImage}
+      src={withBase(article.coverImage)}
       alt={article.coverAlt}
       class:list={[
         'w-full object-cover transition duration-300 group-hover:scale-[1.02]',
@@ -25,7 +26,7 @@ const { article, featured = false } = Astro.props;
   <div class:list={['min-w-0', !featured && 'p-6']}>
     <p class="kicker">{article.category}</p>
     <h3 class:list={[featured ? 'display-lg mt-3' : 'mt-3 text-lg font-bold leading-snug md:text-xl']}>
-      <a href={`/noticias/${article.slug}/`} class="hover:text-forest transition">
+      <a href={withBase(`/noticias/${article.slug}/`)} class="hover:text-forest transition">
         {article.title}
       </a>
     </h3>

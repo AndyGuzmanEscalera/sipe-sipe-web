@@ -1,5 +1,6 @@
 ---
 import type { TourismSpot } from '../types/content';
+import { withBase } from '../lib/withBase';
 
 interface Props {
   spot: TourismSpot;
@@ -8,9 +9,9 @@ interface Props {
 const { spot } = Astro.props;
 ---
 
-<article class="group relative min-h-80 overflow-hidden rounded-xl bg-forest text-white">
+<article class="group relative min-h-80 overflow-hidden rounded-[2rem] bg-forest text-white">
   <img
-    src={spot.image}
+    src={withBase(spot.image)}
     alt={spot.name}
     class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
     loading="lazy"

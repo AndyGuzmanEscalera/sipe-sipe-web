@@ -9,6 +9,7 @@ import {
   organizationalUnits,
 } from '../../data/institucional';
 import { site } from '../../data/site';
+import { withBase } from '../../lib/withBase';
 ---
 
 <BaseLayout title="Institucional" description="Misión, visión, autoridades y estructura organizacional.">
@@ -44,9 +45,9 @@ import { site } from '../../data/site';
   </section>
 
   <section class="container-page py-16">
-    <article class="mb-16 grid items-center gap-10 overflow-hidden rounded-xl border border-line bg-white lg:grid-cols-[280px_1fr]">
+    <article class="mb-16 grid items-center gap-8 overflow-hidden rounded-[2rem] bg-paper-deep lg:grid-cols-[280px_1fr]">
       <img
-        src={site.mayor.photo}
+        src={withBase(site.mayor.photo)}
         alt={`Retrato de ${site.mayor.name}`}
         class="h-80 w-full object-cover object-top lg:h-full"
       />
@@ -66,7 +67,7 @@ import { site } from '../../data/site';
           <article class="grid items-center gap-4 py-8 md:grid-cols-[minmax(0,280px)_1fr]">
             <div class="flex items-center gap-4">
               {authority.photo ? (
-                <img src={authority.photo} alt="" class="h-16 w-16 rounded-full object-cover object-top" />
+                <img src={withBase(authority.photo)} alt="" class="h-16 w-16 rounded-full object-cover object-top" />
               ) : null}
               <div>
                 <h3 class="display-md">{authority.name}</h3>

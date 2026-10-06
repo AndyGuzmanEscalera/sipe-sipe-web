@@ -22,12 +22,12 @@ export const site = {
     { value: '498', label: 'km² de territorio' },
   ],
   mayor: {
-    name: 'Lic. Roberto Mamani Condori',
+    name: 'Fredy Patzi Barrios',
     title: 'Alcalde Municipal',
     welcomeTitle: 'Una gestión cercana a cada comunidad.',
     message:
       'Trabajamos con transparencia, participación ciudadana y una visión de desarrollo que integra a nuestras comunidades. Este portal acerca la información municipal y los servicios públicos a todas las familias de Sipe Sipe.',
-    photo: '/images/alcaldesa.jpg',
+    photo: '/images/alcaldeblanco.png',
     photoNote: 'Retrato institucional de demostración.',
   },
   topLinks: [

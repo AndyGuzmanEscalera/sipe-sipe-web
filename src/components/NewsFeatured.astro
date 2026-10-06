@@ -2,6 +2,7 @@
 import type { NewsArticle } from '../types/content';
 import NewsCard from './NewsCard.astro';
 import SectionHeading from './SectionHeading.astro';
+import { withBase } from '../lib/withBase';
 
 interface Props {
   articles: NewsArticle[];
@@ -25,11 +26,11 @@ const [featured, ...rest] = articles;
         <NewsCard article={featured} featured />
         <div class="surface-card flex flex-col divide-y divide-line overflow-hidden">
           {rest.map((article) => (
-            <a href={`/noticias/${article.slug}/`} class="flex gap-4 px-5 py-4 transition hover:bg-paper-deep">
+            <a href={withBase(`/noticias/${article.slug}/`)} class="flex gap-4 px-5 py-4 transition hover:bg-paper-deep">
               <img
-                src={article.coverImage}
+                src={withBase(article.coverImage)}
                 alt=""
-                class="h-16 w-20 shrink-0 rounded-md object-cover"
+                class="h-16 w-16 shrink-0 rounded-full object-cover"
                 loading="lazy"
               />
               <div class="min-w-0">
