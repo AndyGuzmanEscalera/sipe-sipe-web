@@ -10,19 +10,19 @@ const navLabels: Record<string, string> = {
 const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-white shadow-[0_2px_12px_rgb(32_51_43/0.05)] backdrop-blur-sm">
+<header class="municipal-header sticky top-0 z-40 border-b border-line bg-white">
   <div class="container-page flex items-center justify-between gap-8 py-3">
-    <a href={withBase('/')} class="flex min-w-0 items-center gap-3 text-ink">
-      <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-forest-deep/5 ring-1 ring-line">
-        <img src={withBase('/images/escudo-sipe-sipe.jpg')} alt="Escudo de Sipe Sipe" class="h-10 w-10 object-contain" />
+    <a href={withBase('/')} class="municipal-brand" aria-label="Sipe Sipe, Gobierno Municipal — Inicio">
+      <span class="municipal-brand-emblem">
+        <img src={withBase('/images/escudo-sipe-sipe.jpg')} alt="" width="293" height="267" />
       </span>
-      <span class="min-w-0 flex-col hidden sm:flex">
-        <span class="block truncate text-base font-bold leading-tight">Sipe Sipe</span>
-        <span class="text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-ink-soft">GAM</span>
+      <span class="municipal-brand-text">
+        <span class="municipal-brand-name">Sipe Sipe</span>
+        <span class="municipal-brand-caption">Gobierno Municipal</span>
       </span>
     </a>
 
-    <nav class="hidden flex-1 justify-center lg:flex" aria-label="Principal">
+    <nav class="municipal-nav hidden flex-1 justify-center lg:flex" aria-label="Principal">
       <ul class="flex items-center gap-2">
         {
           desktopNav.map((item) => {
@@ -32,6 +32,7 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
               <li>
                 <a
                   href={withBase(item.href)}
+                  aria-current={active ? 'page' : undefined}
                   class:list={[
                     'block rounded-full px-3.5 py-2 text-[0.85rem] font-medium transition duration-200',
                     active
@@ -78,6 +79,7 @@ const desktopNav = mainNav.filter((item) => item.href !== '/contacto/');
             <li>
               <a
                 href={withBase(item.href)}
+                aria-current={active ? 'page' : undefined}
                 class:list={[
                   'block border-b border-line py-3.5 text-base font-semibold',
                   active ? 'text-adobe' : 'text-ink',
