@@ -10,6 +10,25 @@ import {
 } from '../../data/institucional';
 import { site } from '../../data/site';
 import { withBase } from '../../lib/withBase';
+import { fetchGestion, gestionMediaUrl } from '../../lib/gestionPublic';
+
+const managedInstitutional = await fetchGestion<{
+  mission: string;
+  vision: string;
+  values: { value: string }[];
+}>('/api/public/institutional');
+const institutionalMission = managedInstitutional?.mission || mission;
+const institutionalVision = managedInstitutional?.vision || vision;
+const institutionalValues = managedInstitutional?.values?.map((item) => item.value) ?? values;
+const managedMayor = await fetchGestion<{
+  name: string;
+  title: string;
+  message: string;
+  photo?: { id: string; url?: string };
+}>('/api/public/mayor');
+const publicMayor = managedMayor
+  ? { ...site.mayor, name: managedMayor.name, title: managedMayor.title, message: managedMayor.message, photo: managedMayor.photo?.url ?? gestionMediaUrl(managedMayor.photo?.id) ?? site.mayor.photo }
+  : site.mayor;
 ---
 
 <BaseLayout title="Institucional" description="Misión, visión, autoridades y estructura organizacional.">
@@ -23,11 +42,11 @@ import { withBase } from '../../lib/withBase';
   <section class="container-page grid gap-16 py-16 lg:grid-cols-2">
     <article>
       <p class="kicker">Misión</p>
-      <p class="display-md mt-4 text-ink-soft">{mission}</p>
+       <p class="display-md mt-4 text-ink-soft">{institutionalMission}</p>
     </article>
     <article>
       <p class="kicker">Visión</p>
-      <p class="display-md mt-4 text-ink-soft">{vision}</p>
+       <p class="display-md mt-4 text-ink-soft">{institutionalVision}</p>
     </article>
   </section>
 
@@ -36,7 +55,7 @@ import { withBase } from '../../lib/withBase';
       <p class="kicker">Principios</p>
       <ul class="mt-8 flex flex-wrap gap-x-10 gap-y-4">
         {
-          values.map((value) => (
+           institutionalValues.map((value) => (
             <li class="font-display text-3xl tracking-tight">{value}</li>
           ))
         }
@@ -47,15 +66,15 @@ import { withBase } from '../../lib/withBase';
   <section class="container-page py-16">
     <article class="mb-16 grid items-center gap-8 overflow-hidden rounded-[2rem] bg-paper-deep lg:grid-cols-[280px_1fr]">
       <img
-        src={withBase(site.mayor.photo)}
-        alt={`Retrato de ${site.mayor.name}`}
+         src={publicMayor.photo.startsWith('http') ? publicMayor.photo : withBase(publicMayor.photo)}
+         alt={`Retrato de ${publicMayor.name}`}
         class="h-80 w-full object-cover object-top lg:h-full"
       />
       <div class="p-8 lg:p-10">
         <p class="kicker">Alcaldía</p>
-        <h2 class="display-md mt-3">{site.mayor.name}</h2>
-        <p class="mt-2 text-sm tracking-wide text-adobe">{site.mayor.title}</p>
-        <p class="mt-5 max-w-xl text-ink-soft">{site.mayor.message}</p>
+         <h2 class="display-md mt-3">{publicMayor.name}</h2>
+         <p class="mt-2 text-sm tracking-wide text-adobe">{publicMayor.title}</p>
+         <p class="mt-5 max-w-xl text-ink-soft">{publicMayor.message}</p>
       </div>
     </article>
 

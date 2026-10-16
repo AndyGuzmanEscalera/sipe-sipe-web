@@ -35,6 +35,8 @@ Para conectar un backend (FastAPI) más adelante:
 1. Sustituir imports desde `src/data` por `fetch` en el frontmatter de Astro o por endpoints en build time.
 2. Opcional: migrar noticias/gaceta a **Astro Content Collections** con Markdown/MDX.
 
+La Gaceta ya dispone de integración runtime progresiva mediante `PUBLIC_GESTION_API_URL`. Si la variable está definida, `/gaceta/` consulta la API pública sin requerir un nuevo build para mostrar publicaciones; si no está definida, la página conserva un estado de fallback seguro.
+
 ## Secciones
 
 - Inicio (carrusel, accesos rápidos, mensaje de autoridad, eventos, noticias, turismo)

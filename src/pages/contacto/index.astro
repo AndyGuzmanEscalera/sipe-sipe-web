@@ -2,6 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import { site } from '../../data/site';
+import { fetchGestion } from '../../lib/gestionPublic';
+
+const managedSettings = await fetchGestion<Record<string, string>>('/api/public/site-settings');
+const contact = {
+  address: managedSettings?.address || site.address,
+  phone: managedSettings?.phone || site.phone,
+  supportEmail: managedSettings?.supportEmail || site.supportEmail,
+  hours: managedSettings?.hours || site.hours,
+};
 ---
 
 <BaseLayout title="Contacto" description="Canales de atención al ciudadano — GAM Sipe Sipe.">
@@ -16,19 +25,19 @@ import { site } from '../../data/site';
       <ul class="space-y-8">
         <li>
           <p class="kicker">Dirección</p>
-          <p class="mt-2 text-xl">{site.address}</p>
+           <p class="mt-2 text-xl">{contact.address}</p>
         </li>
         <li>
           <p class="kicker">Teléfono</p>
-          <p class="mt-2 text-xl">{site.phone}</p>
+           <p class="mt-2 text-xl">{contact.phone}</p>
         </li>
         <li>
           <p class="kicker">Correo</p>
-          <p class="mt-2 text-xl">{site.supportEmail}</p>
+           <p class="mt-2 text-xl">{contact.supportEmail}</p>
         </li>
         <li>
           <p class="kicker">Horario</p>
-          <p class="mt-2 text-xl">{site.hours}</p>
+           <p class="mt-2 text-xl">{contact.hours}</p>
         </li>
       </ul>
     </div>

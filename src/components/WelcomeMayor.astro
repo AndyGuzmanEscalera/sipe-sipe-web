@@ -1,6 +1,26 @@
 ---
 import { site } from '../data/site';
 import { withBase } from '../lib/withBase';
+import { fetchGestion, gestionMediaUrl } from '../lib/gestionPublic';
+
+const managedMayor = await fetchGestion<{
+  name: string;
+  title: string;
+  welcome_title: string;
+  message: string;
+  photo_note: string;
+  photo?: { id: string; url?: string };
+}>('/api/public/mayor');
+const mayor = managedMayor
+  ? {
+      name: managedMayor.name,
+      title: managedMayor.title,
+      welcomeTitle: managedMayor.welcome_title,
+      message: managedMayor.message,
+      photo: managedMayor.photo?.url ?? gestionMediaUrl(managedMayor.photo?.id) ?? '',
+      photoNote: managedMayor.photo_note,
+    }
+  : site.mayor;
 ---
 
 <section class="mayor-section section-lg overflow-hidden bg-paper-deep">
@@ -10,24 +30,24 @@ import { withBase } from '../lib/withBase';
         <div class="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-adobe/20" aria-hidden="true"></div>
         <div class="absolute -bottom-8 -right-4 h-24 w-24 rounded-full bg-forest/15" aria-hidden="true"></div>
         <img
-          src={withBase(site.mayor.photo)}
-          alt={`Retrato de ${site.mayor.name}, ${site.mayor.title}`}
+           src={mayor.photo ? (mayor.photo.startsWith('http') ? mayor.photo : withBase(mayor.photo)) : withBase('/images/alcaldeblanco.png')}
+           alt={`Retrato de ${mayor.name}, ${mayor.title}`}
           class="relative z-[1] aspect-[4/5] w-full rounded-[2.25rem] object-cover object-top shadow-[0_22px_50px_rgb(32_51_43/0.18)]"
           loading="lazy"
         />
         <figcaption class="relative z-[1] mt-5 text-center lg:text-left">
-          <p class="text-lg font-bold leading-snug">{site.mayor.name}</p>
-          <p class="mt-1 text-sm text-adobe">{site.mayor.title}</p>
+           <p class="text-lg font-bold leading-snug">{mayor.name}</p>
+           <p class="mt-1 text-sm text-adobe">{mayor.title}</p>
         </figcaption>
       </figure>
 
       <article>
         <p class="kicker">Palabras del Alcalde</p>
-        <h2 class="display-lg mt-3">{site.mayor.welcomeTitle}</h2>
+         <h2 class="display-lg mt-3">{mayor.welcomeTitle}</h2>
         <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-          {site.mayor.message}
+           {mayor.message}
         </p>
-        <p class="mt-4 text-xs text-ink-soft/80">{site.mayor.photoNote}</p>
+         <p class="mt-4 text-xs text-ink-soft/80">{mayor.photoNote}</p>
         <div class="mt-8">
           <a href={withBase('/institucional/')} class="btn-primary solid">
             Conocer la institución

@@ -1,0 +1,45 @@
+---
+import { withBase } from '../lib/withBase';
+
+const apiUrl = import.meta.env.PUBLIC_GESTION_API_URL?.replace(/\/$/, '') ?? '';
+const fallbackHref = withBase('/gaceta/');
+---
+
+<div
+  id="managed-gaceta"
+  data-api={apiUrl}
+  data-fallback={fallbackHref}
+  class="space-y-0"
+>
+  <p class="py-8 text-sm text-ink-soft" data-gaceta-status>Consultando publicaciones oficiales...</p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('#managed-gaceta');
+  const api = root?.dataset.api;
+  if (root && api) {
+    fetch(`${api}/api/public/gaceta?page=1&page_size=50`)
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((payload) => {
+        const items = Array.isArray(payload.items) ? payload.items : [];
+        if (!items.length) {
+          root.innerHTML = '<p class="py-8 text-sm text-ink-soft">No hay publicaciones disponibles.</p>';
+          return;
+        }
+        root.innerHTML = items.map((entry) => `
+          <article class="grid gap-4 border-t border-line py-8 md:grid-cols-[9rem_1fr_auto] md:items-baseline">
+            <p class="font-mono text-xs tracking-wide text-adobe">${escapeHtml(entry.number)}</p>
+            <div><h2 class="display-md">${escapeHtml(entry.title)}</h2><p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.published_at)}</p>${entry.description ? `<p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.description)}</p>` : ''}</div>
+            <a href="${api}/api/public/gaceta/${entry.id}/pdf" class="link-arrow" target="_blank" rel="noreferrer">Descargar</a>
+          </article>`).join('');
+      })
+      .catch(() => {
+        const status = root.querySelector('[data-gaceta-status]');
+        if (status) status.textContent = 'No se pudo consultar la Gaceta en este momento.';
+      });
+  }
+
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
+  }
+</script>
