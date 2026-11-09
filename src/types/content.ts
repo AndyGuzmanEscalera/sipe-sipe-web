@@ -55,14 +55,6 @@ export type Tramite = {
   costBs: number | null;
 };
 
-export type GacetaEntry = {
-  id: string;
-  number: string;
-  title: string;
-  publishedAt: string;
-  pdfUrl: string;
-};
-
 export type Authority = {
   name: string;
   role: string;

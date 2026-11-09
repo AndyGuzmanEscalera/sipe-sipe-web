@@ -1,45 +1,88 @@
 ---
 import { withBase } from '../lib/withBase';
 
+interface Props {
+  /**
+   * `full`: listado completo de la página /gaceta/ con enlace de descarga.
+   * `aside`: bloque resumido para el panel lateral de inicio.
+   */
+  variant?: 'full' | 'aside';
+}
+
+const { variant = 'full' } = Astro.props;
 const apiUrl = import.meta.env.PUBLIC_GESTION_API_URL?.replace(/\/$/, '') ?? '';
-const fallbackHref = withBase('/gaceta/');
+const gacetaHref = withBase('/gaceta/');
 ---
 
 <div
-  id="managed-gaceta"
-  data-api={apiUrl}
-  data-fallback={fallbackHref}
   class="space-y-0"
+  data-managed-gaceta
+  data-variant={variant}
+  data-api={apiUrl}
+  data-gaceta-href={gacetaHref}
 >
   <p class="py-8 text-sm text-ink-soft" data-gaceta-status>Consultando publicaciones oficiales...</p>
 </div>
 
 <script>
-  const root = document.querySelector<HTMLElement>('#managed-gaceta');
-  const api = root?.dataset.api;
-  if (root && api) {
+  /**
+   * Única fuente de verdad de la Gaceta: la API pública de Sipe Sipe Gestión.
+   * No se usan datos de respaldo en el sitio, de modo que nunca se muestran
+   * documentos que ya no existan en la base de datos.
+   */
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
+  }
+
+  function renderFull(api: string, gacetaHref: string, items: any[]): string {
+    if (!items.length) {
+      return '<p class="py-8 text-sm text-ink-soft">No hay publicaciones disponibles.</p>';
+    }
+    return items.map((entry) => `
+      <article class="grid gap-4 border-t border-line py-8 md:grid-cols-[9rem_1fr_auto] md:items-baseline">
+        <p class="font-mono text-xs tracking-wide text-adobe">${escapeHtml(entry.number)}</p>
+        <div><h2 class="display-md">${escapeHtml(entry.title)}</h2><p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.published_at)}</p>${entry.description ? `<p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.description)}</p>` : ''}</div>
+        <a href="${api}/api/public/gaceta/${entry.id}/pdf" class="link-arrow" target="_blank" rel="noreferrer">Descargar</a>
+      </article>`).join('');
+  }
+
+  function renderAside(gacetaHref: string, items: any[]): string {
+    if (!items.length) {
+      return '<p class="text-sm text-white/70">No hay publicaciones disponibles.</p>';
+    }
+    return items.map((entry) => `
+      <li class="py-3">
+        <a href="${gacetaHref}" class="group flex items-start gap-3">
+          <span class="block text-xs font-semibold text-maize/90">${escapeHtml(entry.number)}</span>
+          <span class="block text-sm font-medium leading-snug group-hover:underline">${escapeHtml(entry.title)}</span>
+        </a>
+      </li>`).join('');
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-managed-gaceta]').forEach((root) => {
+    const api = root.dataset.api;
+    const gacetaHref = root.dataset.gacetaHref ?? '/gaceta/';
+    const variant = root.dataset.variant === 'aside' ? 'aside' : 'full';
+
+    if (!api) {
+      root.innerHTML = variant === 'aside'
+        ? '<p class="text-sm text-white/70">Publicaciones no disponibles en este momento.</p>'
+        : '<p class="py-8 text-sm text-ink-soft">Publicaciones no disponibles en este momento.</p>';
+      return;
+    }
+
     fetch(`${api}/api/public/gaceta?page=1&page_size=50`)
       .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
       .then((payload) => {
         const items = Array.isArray(payload.items) ? payload.items : [];
-        if (!items.length) {
-          root.innerHTML = '<p class="py-8 text-sm text-ink-soft">No hay publicaciones disponibles.</p>';
-          return;
-        }
-        root.innerHTML = items.map((entry) => `
-          <article class="grid gap-4 border-t border-line py-8 md:grid-cols-[9rem_1fr_auto] md:items-baseline">
-            <p class="font-mono text-xs tracking-wide text-adobe">${escapeHtml(entry.number)}</p>
-            <div><h2 class="display-md">${escapeHtml(entry.title)}</h2><p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.published_at)}</p>${entry.description ? `<p class="mt-2 text-sm text-ink-soft">${escapeHtml(entry.description)}</p>` : ''}</div>
-            <a href="${api}/api/public/gaceta/${entry.id}/pdf" class="link-arrow" target="_blank" rel="noreferrer">Descargar</a>
-          </article>`).join('');
+        root.innerHTML = variant === 'aside'
+          ? `<ul class="divide-y divide-white/10">${renderAside(gacetaHref, items)}</ul>`
+          : renderFull(api, gacetaHref, items);
       })
       .catch(() => {
-        const status = root.querySelector('[data-gaceta-status]');
-        if (status) status.textContent = 'No se pudo consultar la Gaceta en este momento.';
+        root.innerHTML = variant === 'aside'
+          ? '<p class="text-sm text-white/70">No se pudo consultar la Gaceta en este momento.</p>'
+          : '<p class="py-8 text-sm text-ink-soft">No se pudo consultar la Gaceta en este momento.</p>';
       });
-  }
-
-  function escapeHtml(value: unknown): string {
-    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
-  }
+  });
 </script>

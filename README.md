@@ -35,9 +35,30 @@ Para conectar un backend (FastAPI) más adelante:
 1. Sustituir imports desde `src/data` por `fetch` en el frontmatter de Astro o por endpoints en build time.
 2. Opcional: migrar noticias/gaceta a **Astro Content Collections** con Markdown/MDX.
 
-La Gaceta ya dispone de integración runtime progresiva mediante `PUBLIC_GESTION_API_URL`. Si la variable está definida, `/gaceta/` consulta la API pública sin requerir un nuevo build para mostrar publicaciones; si no está definida, la página conserva un estado de fallback seguro.
+## Integración con Sipe Sipe Gestión
+
+La Gaceta se consume **en runtime** desde la API pública de Sipe Sipe Gestión.
+La página `/gaceta/` y el bloque lateral del inicio usan la **misma** fuente
+(`LiveGaceta.astro`), por lo que no existen documentos de respaldo ni
+enlaces `pdfUrl: '#'` en el sitio.
+
+Configurar `PUBLIC_GESTION_API_URL` con la URL pública del backend:
+
+- **GitHub Pages**: *Settings → Secrets and variables → Actions → Variables*
+  → `PUBLIC_GESTION_API_URL` (el workflow también acepta un Secret).
+- **Cloudflare Pages**: *Settings → Environment variables* → `PUBLIC_GESTION_API_URL`.
+- **Local**: `PUBLIC_GESTION_API_URL=http://localhost:8001 npm run dev`.
+
+Si la variable no está definida, la Gaceta muestra un aviso de
+"Publicaciones no disponibles en este momento" en lugar de datos ficticios.
+
+El resto del contenido (configuración, alcalde, institucional y contacto) se
+consume en **build-time** con respaldo en `src/data/*.ts`; las noticias,
+eventos, trámites, turismo, avisos y galería siguen siendo contenido
+estático pendiente de migración.
 
 ## Secciones
 
 - Inicio (carrusel, accesos rápidos, mensaje de autoridad, eventos, noticias, turismo)
 - Institucional, Concejo, Gaceta, Noticias (+ detalle por slug), Eventos, Trámites, Turismo, Contacto
+

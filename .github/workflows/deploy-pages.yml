@@ -31,6 +31,11 @@ jobs:
       - name: Build site
         env:
           GITHUB_ACTIONS: true
+          # URL pública del backend de Sipe Sipe Gestión.
+          # Configurar en Settings > Secrets and variables > Actions > Variables
+          # (o como Secret). Si no se define, el sitio se construye con los
+          # datos de respaldo y la Gaceta queda sin conexión con la API.
+          PUBLIC_GESTION_API_URL: ${{ vars.PUBLIC_GESTION_API_URL || secrets.PUBLIC_GESTION_API_URL }}
         run: npm run build
 
       - name: Configure GitHub Pages
