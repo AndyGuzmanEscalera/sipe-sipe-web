@@ -2,17 +2,20 @@
 
 @theme {
   --color-paper: #ffffff;
-  --color-paper-deep: #f2f6f4;
-  --color-ink: #18392f;
-  --color-ink-soft: #52675e;
-  --color-forest: #087443;
-  --color-forest-deep: #06432e;
-  --color-adobe: #087eaa;
-  --color-adobe-deep: #066387;
-  --color-maize: #77d8f0;
-  --color-dusk: #7b8e85;
-  --color-line: #dce8e0;
-  --color-line-strong: #c6d8cc;
+  --color-paper-deep: #f3f6f1;
+  --color-ink: #1e2f1a;
+  --color-ink-soft: #4d6348;
+  --color-forest: #40902f;
+  --color-forest-deep: #295d1e;
+  --color-forest-light: #52a83f;
+  /* Acento secundario: verde medio (sustituye el azul en etiquetas y enlaces) */
+  --color-adobe: #356b2b;
+  --color-adobe-deep: #294d22;
+  /* Resalte claro sobre fondos verdes (no cian) */
+  --color-maize: #d4e8c8;
+  --color-dusk: #6a7f64;
+  --color-line: #dce8d8;
+  --color-line-strong: #c5d4bf;
   --font-sans: "Manrope", "Segoe UI", sans-serif;
   --font-display: "Manrope", "Segoe UI", sans-serif;
   --font-mono: "Manrope", "Segoe UI", sans-serif;
@@ -32,8 +35,8 @@ body {
 }
 
 ::selection {
-  background: #bdebd1;
-  color: #0b5d34;
+  background: color-mix(in srgb, var(--color-forest) 25%, white);
+  color: var(--color-forest-deep);
 }
 
 .font-display {
@@ -50,7 +53,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-adobe);
+  color: var(--color-forest);
   display: block;
   margin-bottom: 0.75rem;
 }
@@ -91,7 +94,7 @@ body {
   font-size: 0.875rem;
   font-weight: 750;
   letter-spacing: 0;
-  color: var(--color-adobe);
+  color: var(--color-forest-deep);
 }
 
 .link-arrow::after {
@@ -151,7 +154,7 @@ body {
     to bottom,
     #08a9dc 0 33.333%,
     #fff 33.333% 66.666%,
-    #079447 66.666% 100%
+    var(--color-forest) 66.666% 100%
   );
 }
 
@@ -183,7 +186,7 @@ body {
 
 .btn-primary.solid:hover {
   background: var(--color-forest-deep);
-  box-shadow: 0 8px 20px rgba(7, 116, 71, 0.15);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-forest) 28%, transparent);
   transform: translateY(-1px);
 }
 
@@ -221,7 +224,7 @@ p {
 }
 
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 3px solid var(--color-adobe);
+  outline: 3px solid var(--color-forest);
   outline-offset: 5px;
 }
 
@@ -386,7 +389,15 @@ p {
 }
 
 .municipal-footer {
-  background: #063c2b;
+  background: var(--color-forest-deep);
+}
+
+.municipal-footer .kicker {
+  color: var(--color-maize);
+}
+
+.kicker-on-dark {
+  color: rgb(255 255 255 / 0.88);
 }
 
 @media (max-width: 639px) {

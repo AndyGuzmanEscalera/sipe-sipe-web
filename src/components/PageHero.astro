@@ -17,7 +17,7 @@ interface Props {
 const { kicker, title, subtitle, crumbs = [{ label: 'Inicio', href: '/' }], image } = Astro.props;
 ---
 
-<section class="relative overflow-hidden rounded-b-[2.5rem] bg-gradient-to-br from-forest-deep via-forest to-adobe text-white">
+<section class="relative overflow-hidden rounded-b-[2.5rem] bg-gradient-to-br from-forest-deep via-forest to-forest-light text-white">
   {image && (
     <img src={withBase(image)} alt="" class="absolute inset-0 h-full w-full object-cover" />
   )}
@@ -36,7 +36,7 @@ const { kicker, title, subtitle, crumbs = [{ label: 'Inicio', href: '/' }], imag
       <span class="mx-2 opacity-40">/</span>
       <span class="text-white">{title}</span>
     </nav>
-    {kicker && <p class="kicker mt-8 text-maize">{kicker}</p>}
+    {kicker && <p class="kicker kicker-on-dark mt-8">{kicker}</p>}
     <h1 class="display-lg mt-4 max-w-4xl text-white">{title}</h1>
     {subtitle && <p class="mt-5 max-w-2xl text-lg text-white/75">{subtitle}</p>}
   </div>
