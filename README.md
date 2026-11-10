@@ -1,64 +1,62 @@
 # Portal web GAM Sipe Sipe (Astro)
 
-Sitio institucional público inspirado en portales municipales similares al [GAM Viñinto](https://www.gamvinto.gob.bo/), con **contenido de demostración** y arquitectura lista para crecer.
-
-Este proyecto vive en `website/` y **no modifica** la app Flutter `correspondencia_sipe_sipe`.
+Sitio institucional público del Gobierno Autónomo Municipal de Sipe Sipe.
 
 ## Desarrollo
 
 ```bash
-cd website
 npm install
 npm run dev
 ```
 
-Abrir `http://localhost:4321`.
+Abre `http://localhost:4321`.
 
-## Build
+### API de Gestión en local
 
-```bash
+```powershell
+$env:PUBLIC_GESTION_API_URL = "https://api.sipesipe.gob.bo"
+# o backend local:
+# $env:PUBLIC_GESTION_API_URL = "http://localhost:8001"
+npm run dev
+```
+
+## Build y despliegue
+
+El **build solo empaqueta la aplicación** (HTML, JS, CSS). El contenido editorial administrable **no** se congela en el build si la sección usa componentes *live* (ver tabla abajo).
+
+```powershell
+$env:PUBLIC_GESTION_API_URL = "https://api.sipesipe.gob.bo"
 npm run build
 npm run preview
 ```
 
-## Estructura escalable
+**Cloudflare Pages:** variable de entorno `PUBLIC_GESTION_API_URL=https://api.sipesipe.gob.bo` en producción.
+
+## Contenido runtime vs estático
+
+| Sección | Mecanismo | ¿Requiere nuevo build tras editar en Gestión? |
+|--------|-----------|-----------------------------------------------|
+| Alcalde | Cliente: `LiveMayor.astro` → `/api/public/mayor` | **No** |
+| Institucional (misión, visión, valores) | Cliente: `LiveInstitutional.astro` | **No** |
+| Gabinete / autoridades | Cliente: `LiveAuthorities.astro` | **No** |
+| Gaceta | Cliente: `LiveGaceta.astro` | **No** |
+| Configuración (título/meta parcial) | Build-time: `BaseLayout` + `/api/public/site-settings` | Sí (solo metadatos) |
+| Contacto (datos de contacto) | Build-time parcial + `site.ts` fallback | Sí |
+| Noticias, eventos, trámites, turismo, avisos, galería, concejo | `src/data/*.ts` | Sí |
+
+Los componentes *live* usan `fetch(..., { cache: 'no-store' })` y **no** muestran fixtures como datos vigentes si la API falla.
+
+## Seguridad
+
+El sitio público solo consume **`/api/public/*`**. No hay llamadas a `/api/admin/*` ni credenciales en el cliente.
+
+## Estructura
 
 | Ruta | Uso |
 |------|-----|
-| `src/data/*.ts` | Contenido estático (noticias, eventos, trámites, etc.) |
-| `src/types/content.ts` | Tipos compartidos |
-| `src/components/` | UI reutilizable |
+| `src/components/Live*.astro` | Contenido administrable en runtime |
+| `src/data/*.ts` | Contenido estático pendiente de backend |
+| `src/lib/gestionPublic.ts` | Helper residual (meta/contacto en migración) |
 | `src/pages/` | Rutas del sitio |
 
-Para conectar un backend (FastAPI) más adelante:
-
-1. Sustituir imports desde `src/data` por `fetch` en el frontmatter de Astro o por endpoints en build time.
-2. Opcional: migrar noticias/gaceta a **Astro Content Collections** con Markdown/MDX.
-
-## Integración con Sipe Sipe Gestión
-
-La Gaceta se consume **en runtime** desde la API pública de Sipe Sipe Gestión.
-La página `/gaceta/` y el bloque lateral del inicio usan la **misma** fuente
-(`LiveGaceta.astro`), por lo que no existen documentos de respaldo ni
-enlaces `pdfUrl: '#'` en el sitio.
-
-Configurar `PUBLIC_GESTION_API_URL` con la URL pública del backend:
-
-- **GitHub Pages**: *Settings → Secrets and variables → Actions → Variables*
-  → `PUBLIC_GESTION_API_URL` (el workflow también acepta un Secret).
-- **Cloudflare Pages**: *Settings → Environment variables* → `PUBLIC_GESTION_API_URL`.
-- **Local**: `PUBLIC_GESTION_API_URL=http://localhost:8001 npm run dev`.
-
-Si la variable no está definida, la Gaceta muestra un aviso de
-"Publicaciones no disponibles en este momento" en lugar de datos ficticios.
-
-El resto del contenido (configuración, alcalde, institucional y contacto) se
-consume en **build-time** con respaldo en `src/data/*.ts`; las noticias,
-eventos, trámites, turismo, avisos y galería siguen siendo contenido
-estático pendiente de migración.
-
-## Secciones
-
-- Inicio (carrusel, accesos rápidos, mensaje de autoridad, eventos, noticias, turismo)
-- Institucional, Concejo, Gaceta, Noticias (+ detalle por slug), Eventos, Trámites, Turismo, Contacto
-
+Documentación ampliada: `AUDITORIA_SITIO_WEB_SIPE_SIPE.md`.

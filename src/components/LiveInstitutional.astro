@@ -1,0 +1,79 @@
+---
+const apiUrl = import.meta.env.PUBLIC_GESTION_API_URL?.replace(/\/$/, '') ?? '';
+---
+
+<div data-managed-institutional data-api={apiUrl}>
+  <section class="container-page grid gap-16 py-16 lg:grid-cols-2" data-inst-mission-vision>
+    <p class="py-4 text-sm text-ink-soft col-span-full">Cargando misión y visión…</p>
+  </section>
+  <section class="border-y border-line bg-paper-deep" data-inst-values-wrap>
+    <div class="container-page py-16" data-inst-values>
+      <p class="text-sm text-ink-soft">Cargando principios institucionales…</p>
+    </div>
+  </section>
+</div>
+
+<script>
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-managed-institutional]').forEach((root) => {
+    const api = root.dataset.api;
+    const missionVision = root.querySelector('[data-inst-mission-vision]');
+    const valuesWrap = root.querySelector('[data-inst-values-wrap]') as HTMLElement | null;
+    const valuesRoot = root.querySelector('[data-inst-values]');
+
+    const emptyMission =
+      '<p class="py-8 text-sm text-ink-soft col-span-full">La información institucional no está disponible en este momento.</p>';
+    const emptyValues = '<p class="text-sm text-ink-soft">No hay principios publicados.</p>';
+
+    if (!api || !missionVision || !valuesRoot) {
+      if (missionVision) missionVision.innerHTML = emptyMission;
+      if (valuesRoot) valuesRoot.innerHTML = emptyValues;
+      return;
+    }
+
+    fetch(`${api}/api/public/institutional`, { cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((payload) => {
+        const mission = escapeHtml(payload.mission);
+        const vision = escapeHtml(payload.vision);
+        const values = Array.isArray(payload.values) ? payload.values : [];
+
+        if (!payload.mission && !payload.vision && !values.length) {
+          missionVision.innerHTML = emptyMission;
+          valuesRoot.innerHTML = emptyValues;
+          if (valuesWrap) valuesWrap.hidden = true;
+          return;
+        }
+
+        missionVision.innerHTML = `
+          <article>
+            <p class="kicker">Misión</p>
+            <p class="display-md mt-4 text-ink-soft">${mission || '—'}</p>
+          </article>
+          <article>
+            <p class="kicker">Visión</p>
+            <p class="display-md mt-4 text-ink-soft">${vision || '—'}</p>
+          </article>`;
+
+        if (!values.length) {
+          valuesRoot.innerHTML = emptyValues;
+          return;
+        }
+
+        valuesRoot.innerHTML = `
+          <p class="kicker">Principios</p>
+          <ul class="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+            ${values
+              .map((item: { value?: string }) => `<li class="font-display text-3xl tracking-tight">${escapeHtml(item.value)}</li>`)
+              .join('')}
+          </ul>`;
+      })
+      .catch(() => {
+        missionVision.innerHTML = emptyMission;
+        valuesRoot.innerHTML = emptyValues;
+      });
+  });
+</script>

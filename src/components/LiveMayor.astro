@@ -1,0 +1,134 @@
+---
+import { withBase } from '../lib/withBase';
+
+interface Props {
+  /** Bloque completo del inicio o tarjeta de la página institucional. */
+  variant?: 'home' | 'institutional';
+}
+
+const { variant = 'home' } = Astro.props;
+const apiUrl = import.meta.env.PUBLIC_GESTION_API_URL?.replace(/\/$/, '') ?? '';
+const institucionalHref = withBase('/institucional/');
+const fallbackPhoto = withBase('/images/alcaldeblanco.png');
+---
+
+<div
+  class:list={[
+    variant === 'home' ? 'mayor-section section-lg overflow-hidden bg-paper-deep' : '',
+    variant === 'institutional' ? 'managed-mayor-institutional' : '',
+  ]}
+  data-managed-mayor
+  data-variant={variant}
+  data-api={apiUrl}
+  data-inst-href={institucionalHref}
+  data-fallback-photo={fallbackPhoto}
+>
+  {
+    variant === 'home' ? (
+      <div class="container-page">
+        <p class="py-12 text-sm text-ink-soft" data-mayor-status>
+          Cargando mensaje del alcalde…
+        </p>
+      </div>
+    ) : (
+      <p class="py-8 text-sm text-ink-soft" data-mayor-status>
+        Cargando información de la alcaldía…
+      </p>
+    )
+  }
+</div>
+
+<script>
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
+  }
+
+  function photoUrl(api: string, mayor: Record<string, unknown>, fallback: string): string {
+    const photo = mayor.photo as { id?: string; url?: string } | undefined;
+    if (photo?.url) return String(photo.url);
+    if (photo?.id) return `${api}/api/public/media/${photo.id}`;
+    return fallback;
+  }
+
+  function renderHome(api: string, instHref: string, mayor: Record<string, unknown>, fallbackPhoto: string): string {
+    const name = escapeHtml(mayor.name);
+    const title = escapeHtml(mayor.title);
+    const welcome = escapeHtml(mayor.welcome_title);
+    const message = escapeHtml(mayor.message);
+    const note = escapeHtml(mayor.photo_note);
+    const src = escapeHtml(photoUrl(api, mayor, fallbackPhoto));
+    return `
+      <div class="container-page">
+        <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,360px)_1fr] lg:gap-20">
+          <figure class="relative mx-auto w-full max-w-sm">
+            <div class="absolute -left-6 -top-6 h-28 w-28 rounded-full bg-adobe/20" aria-hidden="true"></div>
+            <div class="absolute -bottom-8 -right-4 h-24 w-24 rounded-full bg-forest/15" aria-hidden="true"></div>
+            <img src="${src}" alt="Retrato de ${name}, ${title}" class="relative z-[1] aspect-[4/5] w-full rounded-[2.25rem] object-cover object-top shadow-[0_22px_50px_rgb(32_51_43/0.18)]" loading="lazy" />
+            <figcaption class="relative z-[1] mt-5 text-center lg:text-left">
+              <p class="text-lg font-bold leading-snug">${name}</p>
+              <p class="mt-1 text-sm text-forest">${title}</p>
+            </figcaption>
+          </figure>
+          <article>
+            <p class="kicker">Palabras del Alcalde</p>
+            <h2 class="display-lg mt-3">${welcome}</h2>
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">${message}</p>
+            ${note ? `<p class="mt-4 text-xs text-ink-soft/80">${note}</p>` : ''}
+            <div class="mt-8">
+              <a href="${escapeHtml(instHref)}" class="btn-primary solid">Conocer la institución</a>
+            </div>
+          </article>
+        </div>
+      </div>`;
+  }
+
+  function renderInstitutional(api: string, mayor: Record<string, unknown>, fallbackPhoto: string): string {
+    const name = escapeHtml(mayor.name);
+    const title = escapeHtml(mayor.title);
+    const message = escapeHtml(mayor.message);
+    const src = escapeHtml(photoUrl(api, mayor, fallbackPhoto));
+    return `
+      <article class="mb-16 grid items-center gap-8 overflow-hidden rounded-[2rem] bg-paper-deep lg:grid-cols-[280px_1fr]">
+        <img src="${src}" alt="Retrato de ${name}" class="h-80 w-full object-cover object-top lg:h-full" loading="lazy" />
+        <div class="p-8 lg:p-10">
+          <p class="kicker">Alcaldía</p>
+          <h2 class="display-md mt-3">${name}</h2>
+          <p class="mt-2 text-sm tracking-wide text-forest">${title}</p>
+          <p class="mt-5 max-w-xl text-ink-soft">${message}</p>
+        </div>
+      </article>`;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-managed-mayor]').forEach((root) => {
+    const api = root.dataset.api;
+    const variant = root.dataset.variant === 'institutional' ? 'institutional' : 'home';
+    const instHref = root.dataset.instHref ?? '/institucional/';
+    const fallbackPhoto = root.dataset.fallbackPhoto ?? '/images/alcaldeblanco.png';
+
+    const unavailable =
+      variant === 'home'
+        ? '<div class="container-page"><p class="py-12 text-sm text-ink-soft">La información del alcalde no está disponible en este momento.</p></div>'
+        : '<p class="py-8 text-sm text-ink-soft">La información de la alcaldía no está disponible en este momento.</p>';
+
+    if (!api) {
+      root.innerHTML = unavailable;
+      return;
+    }
+
+    fetch(`${api}/api/public/mayor`, { cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((mayor) => {
+        if (!mayor || !mayor.name) {
+          root.innerHTML = unavailable;
+          return;
+        }
+        root.innerHTML =
+          variant === 'home'
+            ? renderHome(api, instHref, mayor, fallbackPhoto)
+            : renderInstitutional(api, mayor, fallbackPhoto);
+      })
+      .catch(() => {
+        root.innerHTML = unavailable;
+      });
+  });
+</script>

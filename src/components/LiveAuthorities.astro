@@ -1,0 +1,74 @@
+---
+const apiUrl = import.meta.env.PUBLIC_GESTION_API_URL?.replace(/\/$/, '') ?? '';
+---
+
+<section class="container-page py-16" data-managed-authorities data-api={apiUrl}>
+  <p class="kicker">Gabinete</p>
+  <h2 class="display-lg mt-3 mb-10">Quién firma las decisiones</h2>
+  <p class="text-sm text-ink-soft" data-authorities-status>Cargando autoridades…</p>
+</section>
+
+<script>
+  function escapeHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character));
+  }
+
+  function authorityPhoto(api: string, row: Record<string, unknown>): string {
+    const photo = row.photo as { id?: string; url?: string } | undefined;
+    if (photo?.url) return String(photo.url);
+    if (photo?.id) return `${api}/api/public/media/${photo.id}`;
+    return '';
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-managed-authorities]').forEach((root) => {
+    const api = root.dataset.api;
+    const status = root.querySelector('[data-authorities-status]');
+    const empty = '<p class="text-sm text-ink-soft">No hay autoridades publicadas en este momento.</p>';
+    const error = '<p class="text-sm text-ink-soft">No se pudo consultar el gabinete en este momento.</p>';
+
+    if (!api) {
+      if (status) status.outerHTML = empty;
+      return;
+    }
+
+    fetch(`${api}/api/public/authorities`, { cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response.status)))
+      .then((payload) => {
+        const items = Array.isArray(payload) ? payload : Array.isArray(payload?.items) ? payload.items : [];
+        if (!items.length) {
+          if (status) status.outerHTML = empty;
+          return;
+        }
+        const list = items
+          .map((authority: Record<string, unknown>) => {
+            const name = escapeHtml(authority.name);
+            const position = escapeHtml(authority.position);
+            const title = escapeHtml(authority.professional_title);
+            const description = escapeHtml(authority.description);
+            const src = authorityPhoto(api, authority);
+            const photo = src
+              ? `<img src="${escapeHtml(src)}" alt="" class="h-16 w-16 rounded-full object-cover object-top" loading="lazy" />`
+              : '';
+            const subtitle = [position, title].filter(Boolean).join(' · ');
+            return `
+              <article class="grid items-center gap-4 py-8 md:grid-cols-[minmax(0,280px)_1fr]">
+                <div class="flex items-center gap-4">
+                  ${photo}
+                  <div>
+                    <h3 class="display-md">${name}</h3>
+                    ${subtitle ? `<p class="mt-2 text-sm tracking-wide text-forest">${escapeHtml(subtitle)}</p>` : ''}
+                  </div>
+                </div>
+                ${description ? `<p class="max-w-xl text-ink-soft">${description}</p>` : ''}
+              </article>`;
+          })
+          .join('');
+        if (status) {
+          status.outerHTML = `<div class="divide-y divide-line border-y border-line">${list}</div>`;
+        }
+      })
+      .catch(() => {
+        if (status) status.outerHTML = error;
+      });
+  });
+</script>

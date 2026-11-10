@@ -1,34 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
-import {
-  mission,
-  vision,
-  values,
-  executiveAuthorities,
-  organizationalUnits,
-} from '../../data/institucional';
-import { site } from '../../data/site';
-import { withBase } from '../../lib/withBase';
-import { fetchGestion, gestionMediaUrl } from '../../lib/gestionPublic';
-
-const managedInstitutional = await fetchGestion<{
-  mission: string;
-  vision: string;
-  values: { value: string }[];
-}>('/api/public/institutional');
-const institutionalMission = managedInstitutional?.mission || mission;
-const institutionalVision = managedInstitutional?.vision || vision;
-const institutionalValues = managedInstitutional?.values?.map((item) => item.value) ?? values;
-const managedMayor = await fetchGestion<{
-  name: string;
-  title: string;
-  message: string;
-  photo?: { id: string; url?: string };
-}>('/api/public/mayor');
-const publicMayor = managedMayor
-  ? { ...site.mayor, name: managedMayor.name, title: managedMayor.title, message: managedMayor.message, photo: managedMayor.photo?.url ?? gestionMediaUrl(managedMayor.photo?.id) ?? site.mayor.photo }
-  : site.mayor;
+import LiveInstitutional from '../../components/LiveInstitutional.astro';
+import LiveMayor from '../../components/LiveMayor.astro';
+import LiveAuthorities from '../../components/LiveAuthorities.astro';
+import { organizationalUnits } from '../../data/institucional';
 ---
 
 <BaseLayout title="Institucional" description="Misión, visión, autoridades y estructura organizacional.">
@@ -39,69 +15,19 @@ const publicMayor = managedMayor
     image="/images/iglesia-san-pedro-fachada.jpg"
   />
 
-  <section class="container-page grid gap-16 py-16 lg:grid-cols-2">
-    <article>
-      <p class="kicker">Misión</p>
-       <p class="display-md mt-4 text-ink-soft">{institutionalMission}</p>
-    </article>
-    <article>
-      <p class="kicker">Visión</p>
-       <p class="display-md mt-4 text-ink-soft">{institutionalVision}</p>
-    </article>
-  </section>
-
-  <section class="border-y border-line bg-paper-deep">
-    <div class="container-page py-16">
-      <p class="kicker">Principios</p>
-      <ul class="mt-8 flex flex-wrap gap-x-10 gap-y-4">
-        {
-           institutionalValues.map((value) => (
-            <li class="font-display text-3xl tracking-tight">{value}</li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+  <LiveInstitutional />
 
   <section class="container-page py-16">
-    <article class="mb-16 grid items-center gap-8 overflow-hidden rounded-[2rem] bg-paper-deep lg:grid-cols-[280px_1fr]">
-      <img
-         src={publicMayor.photo.startsWith('http') ? publicMayor.photo : withBase(publicMayor.photo)}
-         alt={`Retrato de ${publicMayor.name}`}
-        class="h-80 w-full object-cover object-top lg:h-full"
-      />
-      <div class="p-8 lg:p-10">
-        <p class="kicker">Alcaldía</p>
-         <h2 class="display-md mt-3">{publicMayor.name}</h2>
-         <p class="mt-2 text-sm tracking-wide text-adobe">{publicMayor.title}</p>
-         <p class="mt-5 max-w-xl text-ink-soft">{publicMayor.message}</p>
-      </div>
-    </article>
-
-    <p class="kicker">Gabinete</p>
-    <h2 class="display-lg mt-3 mb-10">Quién firma las decisiones</h2>
-    <div class="divide-y divide-line border-y border-line">
-      {
-        executiveAuthorities.map((authority) => (
-          <article class="grid items-center gap-4 py-8 md:grid-cols-[minmax(0,280px)_1fr]">
-            <div class="flex items-center gap-4">
-              {authority.photo ? (
-                <img src={withBase(authority.photo)} alt="" class="h-16 w-16 rounded-full object-cover object-top" />
-              ) : null}
-              <div>
-                <h3 class="display-md">{authority.name}</h3>
-                <p class="mt-2 text-sm tracking-wide text-adobe">{authority.role}</p>
-              </div>
-            </div>
-            <p class="max-w-xl text-ink-soft">{authority.bio}</p>
-          </article>
-        ))
-      }
-    </div>
+    <LiveMayor variant="institutional" />
   </section>
+
+  <LiveAuthorities />
 
   <section class="container-page pb-20">
     <p class="kicker">Estructura</p>
+    <p class="mt-2 text-xs text-ink-soft/80">
+      Unidades organizacionales: pendiente de administración desde Gestión (dato temporal en sitio).
+    </p>
     <ol class="mt-8 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
       {
         organizationalUnits.map((unit, index) => (

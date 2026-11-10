@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroEditorial from '../components/HeroEditorial.astro';
-import WelcomeMayor from '../components/WelcomeMayor.astro';
+import LiveMayor from '../components/LiveMayor.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import NewsFeatured from '../components/NewsFeatured.astro';
 import NoticesBoard from '../components/NoticesBoard.astro';
@@ -23,7 +23,7 @@ const upcomingEvents = getUpcomingEvents(4);
   description="Portal institucional del Gobierno Autónomo Municipal de Sipe Sipe."
 >
   <HeroEditorial />
-  <WelcomeMayor />
+  <LiveMayor />
   <NewsFeatured articles={latestNews} />
   <NoticesBoard />
   <TransparencyStrip />
